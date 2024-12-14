@@ -136,7 +136,7 @@ public class CreateAccount extends AppCompatActivity {
     }
 
     private void navigateToMain() {
-        Intent intent = new Intent(CreateAccount.this, MainActivity.class);
+        Intent intent = new Intent(CreateAccount.this, PerfilActivity.class);
         startActivity(intent);
         finish();
     }
@@ -182,13 +182,6 @@ public class CreateAccount extends AppCompatActivity {
             erro = Objects.requireNonNull(((FirebaseAuthException) exception).getLocalizedMessage());
         }
         showToast(erro);
-    }
-
-    private void navigateToMainActivity() {
-        // Redireciona para a tela principal após cadastro
-        Intent intent = new Intent(CreateAccount.this, MainActivity.class);
-        startActivity(intent);
-        finish();
     }
 
     private void showToast(String message) {
