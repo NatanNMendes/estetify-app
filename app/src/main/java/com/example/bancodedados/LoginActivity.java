@@ -57,7 +57,7 @@ public class LoginActivity extends AppCompatActivity {
         progress_bar = findViewById(R.id.progress_bar);
 
         // Configurando eventos de clique
-        toBackScreen.setOnClickListener(v -> IrParaPerfilActivity());
+        toBackScreen.setOnClickListener(v -> goToBackScreen(toBackScreen));
         loginButton.setOnClickListener(v -> validarLogin());
         togglePasswordButton.setOnClickListener(v -> togglePasswordVisibility(edit_senha, togglePasswordButton));
         signUpButton.setOnClickListener(v -> goToCreateAccount());
@@ -91,6 +91,7 @@ public class LoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             Toast.makeText(LoginActivity.this, mensagens[1], Toast.LENGTH_SHORT).show();
                             IrParaPerfilActivity();
+
                         } else {
                             String erro;
                             try {
@@ -115,7 +116,18 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void goToBackScreen(View view) {
-        finish();
+        Intent intent = getIntent();
+        String cameFrom = intent.getStringExtra("came_from");
+
+        if ("PerfilActivity".equals(cameFrom)) {
+            // Redireciona para a StartScreen
+            Intent startScreenIntent = new Intent(this, StartScreen.class);
+            startActivity(startScreenIntent);
+            finish();
+        } else {
+            // Caso contrário, apenas finaliza a tela atual
+            finish();
+        }
     }
 
     public void goToCreateAccount() {

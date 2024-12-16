@@ -78,12 +78,14 @@ public class StartScreen extends AppCompatActivity {
         if (usuarioAtual != null) {
             Intent intent = new Intent(StartScreen.this, PerfilActivity.class);
             startActivity(intent);
+            finish();
         }
     }
 
     private void goToLogin() {
         Intent intent = new Intent(StartScreen.this, LoginActivity.class);
         startActivity(intent);
+        finish();
     }
 
     private void launchSignIn() {

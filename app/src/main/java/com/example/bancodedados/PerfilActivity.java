@@ -54,6 +54,7 @@ public class PerfilActivity extends AppCompatActivity {
             public void onClick(View v) {
                 FirebaseAuth.getInstance().signOut();
                 Intent intent = new Intent(PerfilActivity.this, LoginActivity.class);
+                intent.putExtra("came_from", "PerfilActivity");
                 startActivity(intent);
                 finish();
             }
