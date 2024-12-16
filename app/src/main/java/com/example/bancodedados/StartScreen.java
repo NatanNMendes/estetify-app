@@ -76,7 +76,7 @@ public class StartScreen extends AppCompatActivity {
         FirebaseUser usuarioAtual = FirebaseAuth.getInstance().getCurrentUser();
 
         if (usuarioAtual != null) {
-            Intent intent = new Intent(StartScreen.this, MainActivity.class);
+            Intent intent = new Intent(StartScreen.this, PerfilActivity.class);
             startActivity(intent);
         }
     }
@@ -158,7 +158,7 @@ public class StartScreen extends AppCompatActivity {
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         Log.d(TAG, "Usuário salvo no Firestore com sucesso");
-                        startActivity(new Intent(StartScreen.this, MainActivity.class));
+                        startActivity(new Intent(StartScreen.this, PerfilActivity.class));
                         finish();
                     } else {
                         Log.e(TAG, "Erro ao salvar no Firestore", task.getException());

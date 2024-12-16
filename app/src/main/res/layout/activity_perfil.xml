@@ -7,6 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
+    android:background="@drawable/background"
     tools:context=".PerfilActivity">
 
     <View
@@ -20,8 +21,12 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <ImageView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:id="@+id/perfil_foto"
+        android:layout_width="130dp"
+        android:layout_height="130dp"
+        android:background="@drawable/container_user"
+        android:scaleType="centerCrop"
+        android:clipToOutline="true"
         android:src="@drawable/ic_person"
         app:layout_constraintStart_toStartOf="@id/containerUser"
         app:layout_constraintEnd_toEndOf="@id/containerUser"
