@@ -24,6 +24,7 @@ import com.example.bancodedados.utils.Navigation;
 import com.example.bancodedados.utils.PasswordVisibility;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -39,7 +40,6 @@ public class CreateAccount extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firestore;
     private PasswordVisibility passwordVisibility;
-    private boolean isPasswordVisible = false;
     private static final String[] mensagens = {
             "Preencha todos os campos",
             "Cadastro realizado com sucesso",
@@ -112,43 +112,40 @@ public class CreateAccount extends AppCompatActivity {
         // Criação de usuário no Firebase Authentication
         firebaseAuth.createUserWithEmailAndPassword(email, senha).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                salvarDadosUsuario(nome);
+                salvarDadosUsuario(Objects.requireNonNull(firebaseAuth.getCurrentUser()));
             } else {
                 handleAuthError(task.getException());
             }
         });
     }
 
-    private void salvarDadosUsuario(String nome) {
-        // Obtém o UID do usuário autenticado
-        String usuarioID = Objects.requireNonNull(firebaseAuth.getCurrentUser()).getUid();
+    private void salvarDadosUsuario(FirebaseUser user) {
+        String usuarioID = user.getUid();
 
-        // Adiciona logs para verificar o UID e o nome
         Log.d(TAG, "UID do usuário autenticado: " + usuarioID);
-        Log.d(TAG, "Nome do usuário: " + nome);
+        Log.d(TAG, "Email do usuário: " + user.getEmail());
 
-        // Prepara o documento para salvar no Firestore
+        Map<String, Object> usuario = new HashMap<>();
+        usuario.put("nome", user.getDisplayName());
+        usuario.put("email", user.getEmail());
+        usuario.put("fotoPerfil", user.getPhotoUrl() != null ? user.getPhotoUrl().toString() : null);
+        usuario.put("dataCriacao", System.currentTimeMillis());
+
         DocumentReference documentReference = firestore.collection("Users").document(usuarioID);
-
-        Map<String, Object> usuarios = new HashMap<>();
-        usuarios.put("nome", nome);
-        usuarios.put("email", firebaseAuth.getCurrentUser().getEmail());
-        usuarios.put("dataCriacao", System.currentTimeMillis());
-
-        documentReference.set(usuarios)
+        documentReference.set(usuario)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         Log.d(TAG, "Usuário salvo no Firestore com sucesso");
-                        showToast("Usuário cadastrado com sucesso!");
                         navigation.navigationToScreen(PerfilActivity.class);
+                        finish();
                     } else {
                         Log.e(TAG, "Erro ao salvar no Firestore", task.getException());
-                        showToast("Erro ao salvar os dados no Firestore");
+                        Toast.makeText(CreateAccount.this, "Erro ao salvar os dados no Firestore.", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addOnFailureListener(e -> {
                     Log.e(TAG, "Erro ao salvar no Firestore", e);
-                    showToast("Erro ao salvar os dados no Firestore");
+                    Toast.makeText(CreateAccount.this, "Erro ao salvar os dados no Firestore.", Toast.LENGTH_SHORT).show();
                 });
     }
 
