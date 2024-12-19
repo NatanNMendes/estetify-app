@@ -20,6 +20,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.bancodedados.utils.Navigation;
+import com.example.bancodedados.utils.PasswordVisibility;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.firestore.DocumentReference;
@@ -30,16 +32,14 @@ import java.util.Map;
 import java.util.Objects;
 
 public class CreateAccount extends AppCompatActivity {
-
     private static final String TAG = "CreateAccount";
-
     private EditText usernameInput, emailInput, passwordInput, confirmPasswordInput;
     private Button createAccountButton;
     private ImageButton togglePasswordButton, toggleConfirmPasswordButton;
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firestore;
+    private PasswordVisibility passwordVisibility;
     private boolean isPasswordVisible = false;
-
     private static final String[] mensagens = {
             "Preencha todos os campos",
             "Cadastro realizado com sucesso",
@@ -47,19 +47,20 @@ public class CreateAccount extends AppCompatActivity {
             "Senha muito curta",
             "As senhas não coincidem"
     };
+    private Navigation navigation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_account);
-
+        passwordVisibility = new PasswordVisibility();
+        navigation = new Navigation(this);
         setupUI();
         setupWindow();
         setupListeners();
     }
 
     private void setupUI() {
-        // Inicializa os componentes da UI
         usernameInput = findViewById(R.id.usernameInput);
         emailInput = findViewById(R.id.emailInput);
         passwordInput = findViewById(R.id.passwordInput);
@@ -68,7 +69,6 @@ public class CreateAccount extends AppCompatActivity {
         toggleConfirmPasswordButton = findViewById(R.id.toggleConfirmPasswordButton);
         createAccountButton = findViewById(R.id.createAccountButton);
 
-        // Inicializa Firebase
         firebaseAuth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
     }
@@ -88,11 +88,8 @@ public class CreateAccount extends AppCompatActivity {
     }
 
     private void setupListeners() {
-        // Alternar visibilidade da senha
-        togglePasswordButton.setOnClickListener(view -> togglePasswordVisibility(passwordInput, togglePasswordButton));
-        toggleConfirmPasswordButton.setOnClickListener(view -> togglePasswordVisibility(confirmPasswordInput, toggleConfirmPasswordButton));
-
-        // Botão de criar conta
+        togglePasswordButton.setOnClickListener(view -> passwordVisibility.togglePasswordVisibility(passwordInput, togglePasswordButton));
+        toggleConfirmPasswordButton.setOnClickListener(view -> passwordVisibility.togglePasswordVisibility(confirmPasswordInput, toggleConfirmPasswordButton));
         createAccountButton.setOnClickListener(view -> {
             String nome = usernameInput.getText().toString().trim();
             String email = emailInput.getText().toString().trim();
@@ -111,19 +108,6 @@ public class CreateAccount extends AppCompatActivity {
         });
     }
 
-    private void togglePasswordVisibility(EditText passwordField, ImageButton toggleButton) {
-        // Alterna visibilidade da senha
-        isPasswordVisible = !isPasswordVisible;
-        if (isPasswordVisible) {
-            passwordField.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
-            toggleButton.setImageResource(R.drawable.ic_visibility_on);
-        } else {
-            passwordField.setTransformationMethod(PasswordTransformationMethod.getInstance());
-            toggleButton.setImageResource(R.drawable.ic_visibility_off);
-        }
-        passwordField.setSelection(passwordField.getText().length());
-    }
-
     private void createAccount(String email, String senha, String nome) {
         // Criação de usuário no Firebase Authentication
         firebaseAuth.createUserWithEmailAndPassword(email, senha).addOnCompleteListener(task -> {
@@ -133,12 +117,6 @@ public class CreateAccount extends AppCompatActivity {
                 handleAuthError(task.getException());
             }
         });
-    }
-
-    private void navigateToMain() {
-        Intent intent = new Intent(CreateAccount.this, PerfilActivity.class);
-        startActivity(intent);
-        finish();
     }
 
     private void salvarDadosUsuario(String nome) {
@@ -162,7 +140,7 @@ public class CreateAccount extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         Log.d(TAG, "Usuário salvo no Firestore com sucesso");
                         showToast("Usuário cadastrado com sucesso!");
-                        navigateToMain();
+                        navigation.navigationToScreen(PerfilActivity.class);
                     } else {
                         Log.e(TAG, "Erro ao salvar no Firestore", task.getException());
                         showToast("Erro ao salvar os dados no Firestore");

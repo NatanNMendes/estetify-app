@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.bancodedados.utils.Navigation;
 import com.google.android.gms.auth.api.identity.BeginSignInRequest;
 import com.google.android.gms.auth.api.identity.Identity;
 import com.google.android.gms.auth.api.identity.SignInClient;
@@ -30,7 +31,7 @@ public class StartScreen extends AppCompatActivity {
     private FirebaseFirestore firestore;
     private SignInClient oneTapClient;
     private BeginSignInRequest signInRequest;
-
+    private Navigation navigation;
     private static final String TAG = "StartScreen";
 
     @Override
@@ -38,6 +39,8 @@ public class StartScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_start_screen);
+
+        navigation = new Navigation(this);
 
         // Configurações de janela
         Window window = getWindow();
@@ -65,7 +68,7 @@ public class StartScreen extends AppCompatActivity {
         LinearLayout googleSignInButton = findViewById(R.id.login_google_button);
         Button loginButton = findViewById(R.id.login_button);
 
-        loginButton.setOnClickListener(v -> goToLogin());
+        loginButton.setOnClickListener(v -> navigation.navigationToScreen(LoginActivity.class));
         googleSignInButton.setOnClickListener(v -> launchSignIn());
     }
 
@@ -76,17 +79,10 @@ public class StartScreen extends AppCompatActivity {
         FirebaseUser usuarioAtual = FirebaseAuth.getInstance().getCurrentUser();
 
         if (usuarioAtual != null) {
-            Intent intent = new Intent(StartScreen.this, PerfilActivity.class);
-            startActivity(intent);
-            finish();
+            navigation.navigationToScreen(PerfilActivity.class);
         }
     }
 
-    private void goToLogin() {
-        Intent intent = new Intent(StartScreen.this, LoginActivity.class);
-        startActivity(intent);
-        finish();
-    }
 
     private void launchSignIn() {
         oneTapClient.beginSignIn(signInRequest)

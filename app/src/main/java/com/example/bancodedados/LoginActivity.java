@@ -21,6 +21,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.bancodedados.utils.Navigation;
+import com.example.bancodedados.utils.PasswordVisibility;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -33,6 +35,8 @@ public class LoginActivity extends AppCompatActivity {
     private EditText edit_email, edit_senha;
     private Button btn_entrar;
     private ProgressBar progress_bar;
+    private Navigation navigation;
+    private PasswordVisibility passwordVisibility;
     String[] mensagens = {"Preencha todos os campos", "Login realizado com sucesso", "Erro ao realizar login"};
 
     private boolean isPasswordVisible = false;
@@ -42,12 +46,14 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        navigation = new Navigation(this);
+        passwordVisibility = new PasswordVisibility();
+
         Window window = getWindow();
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.setStatusBarColor(getResources().getColor(R.color.white));
 
-        // Inicializando os elementos da interface
         edit_email = findViewById(R.id.usernameInput);
         edit_senha = findViewById(R.id.passwordInput);
         ImageButton togglePasswordButton = findViewById(R.id.togglePasswordButton);
@@ -56,11 +62,10 @@ public class LoginActivity extends AppCompatActivity {
         Button loginButton = findViewById(R.id.loginButton);
         progress_bar = findViewById(R.id.progress_bar);
 
-        // Configurando eventos de clique
-        toBackScreen.setOnClickListener(v -> goToBackScreen(toBackScreen));
+        toBackScreen.setOnClickListener(v -> navigation.navigationToBackScreen(this));
         loginButton.setOnClickListener(v -> validarLogin());
-        togglePasswordButton.setOnClickListener(v -> togglePasswordVisibility(edit_senha, togglePasswordButton));
-        signUpButton.setOnClickListener(v -> goToCreateAccount());
+        togglePasswordButton.setOnClickListener(v -> passwordVisibility.togglePasswordVisibility(edit_senha, togglePasswordButton));
+        signUpButton.setOnClickListener(v ->  navigation.navigationToScreen(CreateAccount.class));
     }
 
     public void validarLogin() {
@@ -90,7 +95,7 @@ public class LoginActivity extends AppCompatActivity {
                         progress_bar.setVisibility(View.GONE); // Oculta a barra de progresso após a resposta
                         if (task.isSuccessful()) {
                             Toast.makeText(LoginActivity.this, mensagens[1], Toast.LENGTH_SHORT).show();
-                            IrParaPerfilActivity();
+                            navigation.navigationToScreen(PerfilActivity.class);
 
                         } else {
                             String erro;
@@ -109,45 +114,4 @@ public class LoginActivity extends AppCompatActivity {
                 });
     }
 
-    private void IrParaPerfilActivity() {
-        Intent intent = new Intent(LoginActivity.this, PerfilActivity.class);
-        startActivity(intent);
-        finish();
-    }
-
-    public void goToBackScreen(View view) {
-        Intent intent = getIntent();
-        String cameFrom = intent.getStringExtra("came_from");
-
-        if ("PerfilActivity".equals(cameFrom)) {
-            // Redireciona para a StartScreen
-            Intent startScreenIntent = new Intent(this, StartScreen.class);
-            startActivity(startScreenIntent);
-            finish();
-        } else {
-            // Caso contrário, apenas finaliza a tela atual
-            finish();
-        }
-    }
-
-    public void goToCreateAccount() {
-        Intent intent = new Intent(LoginActivity.this, CreateAccount.class);
-        startActivity(intent);
-        finish();
-    }
-
-    private void togglePasswordVisibility(EditText passwordField, ImageButton toggleButton) {
-        isPasswordVisible = !isPasswordVisible;
-        if (isPasswordVisible) {
-            // Tornar a senha visível
-            passwordField.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
-            toggleButton.setImageResource(R.drawable.ic_visibility_on); // Ícone para senha visível
-        } else {
-            // Tornar a senha oculta
-            passwordField.setTransformationMethod(PasswordTransformationMethod.getInstance());
-            toggleButton.setImageResource(R.drawable.ic_visibility_off); // Ícone para senha oculta
-        }
-        // Movendo o cursor para o final do texto
-        passwordField.setSelection(passwordField.getText().length());
-    }
 }
