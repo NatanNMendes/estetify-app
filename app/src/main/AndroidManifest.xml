@@ -22,7 +22,7 @@
             android:exported="false"
             android:launchMode="singleTop" />
         <activity
-            android:name=".CreateAccount"
+            android:name=".SignUpActivity"
             android:exported="false" />
         <activity
             android:name=".StartScreen"

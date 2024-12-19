@@ -1,11 +1,8 @@
 package com.example.bancodedados;
 
-import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.text.method.HideReturnsTransformationMethod;
-import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
@@ -32,7 +29,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class CreateAccount extends AppCompatActivity {
+public class SignUpActivity extends AppCompatActivity {
     private static final String TAG = "CreateAccount";
     private EditText usernameInput, emailInput, passwordInput, confirmPasswordInput;
     private Button createAccountButton;
@@ -52,7 +49,7 @@ public class CreateAccount extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_account);
+        setContentView(R.layout.activity_sign_up);
         passwordVisibility = new PasswordVisibility();
         navigation = new Navigation(this);
         setupUI();
@@ -140,12 +137,12 @@ public class CreateAccount extends AppCompatActivity {
                         finish();
                     } else {
                         Log.e(TAG, "Erro ao salvar no Firestore", task.getException());
-                        Toast.makeText(CreateAccount.this, "Erro ao salvar os dados no Firestore.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SignUpActivity.this, "Erro ao salvar os dados no Firestore.", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addOnFailureListener(e -> {
                     Log.e(TAG, "Erro ao salvar no Firestore", e);
-                    Toast.makeText(CreateAccount.this, "Erro ao salvar os dados no Firestore.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SignUpActivity.this, "Erro ao salvar os dados no Firestore.", Toast.LENGTH_SHORT).show();
                 });
     }
 
