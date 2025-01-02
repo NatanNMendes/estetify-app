@@ -19,7 +19,7 @@ public class StartScreen extends AppCompatActivity {
     private FirebaseFirestore firestore;
     private Navigation navigation;
     private static final String TAG = "StartScreen";
-    private com.example.bancodedados.SignInGoogleService signInGoogleService;
+    private com.example.bancodedados.services.SignInGoogleService signInGoogleService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +30,7 @@ public class StartScreen extends AppCompatActivity {
         navigation = new Navigation(this);
         mAuth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
-        signInGoogleService = new com.example.bancodedados.SignInGoogleService(this);
+        signInGoogleService = new com.example.bancodedados.services.SignInGoogleService(this);
 
         Window window = getWindow();
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -58,7 +58,7 @@ public class StartScreen extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == com.example.bancodedados.SignInGoogleService.SIGN_IN_REQUEST_CODE) {
+        if (requestCode == com.example.bancodedados.services.SignInGoogleService.SIGN_IN_REQUEST_CODE) {
             signInGoogleService.handleSignInResult(requestCode, resultCode, data);
         }
     }

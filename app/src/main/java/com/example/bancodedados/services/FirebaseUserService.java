@@ -15,11 +15,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 import java.util.Map;
 
-public class FirebaseService {
+public class FirebaseUserService {
     private static final String TAG = "FirebaseService";
     private final FirebaseFirestore firestore;
 
-    public FirebaseService() {
+    public FirebaseUserService() {
         firestore = FirebaseFirestore.getInstance();
     }
 

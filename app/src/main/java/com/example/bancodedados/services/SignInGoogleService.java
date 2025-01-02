@@ -1,19 +1,23 @@
-package com.example.bancodedados;
+package com.example.bancodedados.services;
 
 import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.bancodedados.PerfilActivity;
+import com.example.bancodedados.R;
 import com.example.bancodedados.utils.Navigation;
 import com.google.android.gms.auth.api.identity.BeginSignInRequest;
 import com.google.android.gms.auth.api.identity.Identity;
 import com.google.android.gms.auth.api.identity.SignInClient;
 import com.google.android.gms.auth.api.identity.SignInCredential;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
 public class SignInGoogleService {
+    private FirebaseUserService firebaseUserService;
     private static final String TAG = "SignInGoogleService";
     public static final int SIGN_IN_REQUEST_CODE = 1001;
     private AppCompatActivity activity;
@@ -27,6 +31,7 @@ public class SignInGoogleService {
 
         oneTapClient = Identity.getSignInClient(activity);
 
+        firebaseUserService = new FirebaseUserService();
 
         signInRequest = new BeginSignInRequest.Builder()
                 .setGoogleIdTokenRequestOptions(
@@ -75,7 +80,13 @@ public class SignInGoogleService {
         FirebaseAuth.getInstance().signInWithCredential(GoogleAuthProvider.getCredential(idToken, null))
                 .addOnCompleteListener(activity, task -> {
                     if (task.isSuccessful()) {
-                        Log.d(TAG, "Usuário autenticado: " + FirebaseAuth.getInstance().getCurrentUser().getEmail());
+                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                        if (user != null) {
+                            // Salva os dados do usuário no Firestore
+                            firebaseUserService.saveUserData(user, activity);
+                        }
+
+                        Log.d(TAG, "Usuário autenticado: " + (user != null ? user.getEmail() : "Desconhecido"));
                         activity.startActivity(new Intent(activity, PerfilActivity.class));
                         activity.finish();
                     } else {
