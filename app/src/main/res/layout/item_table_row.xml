@@ -10,7 +10,7 @@
 
     <!-- Primeira Coluna (Maior) -->
     <TextView
-        android:id="@+id/table_text_large"
+        android:id="@+id/product_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="3"
@@ -23,7 +23,7 @@
 
     <!-- Segunda Coluna (Menor) -->
     <TextView
-        android:id="@+id/table_text_small"
+        android:id="@+id/product_price"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"

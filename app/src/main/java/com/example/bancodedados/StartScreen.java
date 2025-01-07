@@ -50,7 +50,7 @@ public class StartScreen extends AppCompatActivity {
         super.onStart();
 
         if (mAuth.getCurrentUser() != null) {
-            navigation.navigationToScreen(PerfilActivity.class);
+            navigation.navigationToScreen(MainActivity.class);
         }
     }
 

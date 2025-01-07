@@ -6,6 +6,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.example.bancodedados.MainActivity;
 import com.example.bancodedados.PerfilActivity;
 import com.example.bancodedados.utils.Navigation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -35,7 +36,7 @@ public class SignInService {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             Toast.makeText(context, "Login realizado com sucesso", Toast.LENGTH_SHORT).show();
-                            navigation.navigationToScreen(PerfilActivity.class);
+                            navigation.navigationToScreen(MainActivity.class);
                         } else {
                             String erro;
                             try {

@@ -4,15 +4,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import java.util.List;
 
 public class TableAdapter extends RecyclerView.Adapter<TableAdapter.ViewHolder> {
 
-    // Lista para armazenar objetos com duas colunas
+    // Lista para armazenar objetos com dados dos produtos
     private List<RowItem> items;
 
     // Construtor para receber os dados
@@ -29,15 +27,36 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        // Bind dos dados para as duas colunas
+        // Vincula os dados para as duas colunas
         RowItem item = items.get(position);
+
+        // Exibir nome do produto
         holder.largeText.setText(item.getLargeColumn());
-        holder.smallText.setText(item.getSmallColumn());
+
+        // Formatar e exibir o preço
+        String formattedPrice = formatPrice(item.getSmallColumn());
+        holder.smallText.setText(formattedPrice);
     }
 
     @Override
     public int getItemCount() {
         return items.size();
+    }
+
+    // Método para atualizar os dados dinamicamente
+    public void updateItems(List<RowItem> newItems) {
+        this.items = newItems;
+        notifyDataSetChanged();
+    }
+
+    // Método para formatar os preços
+    private String formatPrice(String price) {
+        try {
+            double value = Double.parseDouble(price);
+            return String.format("R$ %.2f", value);
+        } catch (NumberFormatException e) {
+            return "Preço Inválido";
+        }
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -46,15 +65,15 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.ViewHolder> 
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            largeText = itemView.findViewById(R.id.table_text_large);
-            smallText = itemView.findViewById(R.id.table_text_small);
+            largeText = itemView.findViewById(R.id.product_name);
+            smallText = itemView.findViewById(R.id.product_price);
         }
     }
 
     // Classe para representar os itens da tabela
     public static class RowItem {
-        private String largeColumn;
-        private String smallColumn;
+        private String largeColumn; // Nome do produto
+        private String smallColumn; // Preço do produto
 
         public RowItem(String largeColumn, String smallColumn) {
             this.largeColumn = largeColumn;

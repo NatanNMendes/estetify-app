@@ -12,7 +12,9 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class FirebaseUserService {
@@ -41,6 +43,9 @@ public class FirebaseUserService {
         usuario.put("email", user.getEmail());
         usuario.put("fotoPerfil", user.getPhotoUrl() != null ? user.getPhotoUrl().toString() : null);
         usuario.put("dataCriacao", System.currentTimeMillis());
+        List<Map<String, Object>> produtosComprados = new ArrayList<>();
+        usuario.put("produtosComprados", produtosComprados);
+
         Log.d(TAG, "Mapa de dados do usuário criado com sucesso: " + usuario);
         return usuario;
     }
