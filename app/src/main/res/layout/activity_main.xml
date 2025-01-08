@@ -139,13 +139,14 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/carousel_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:layout_marginTop="8dp"
+        android:layout_height="186dp"
+        android:layout_marginTop="16dp"
         android:clipToPadding="false"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
         android:overScrollMode="never"
         app:layout_constraintTop_toBottomOf="@id/category_buttons"
+        app:layout_constraintBottom_toTopOf="@id/table_recycler_view"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

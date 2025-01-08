@@ -3,49 +3,82 @@ package com.example.bancodedados.utils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.bancodedados.R;
 
 import java.util.List;
+import java.util.Map;
 
-public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
-    private List<String> items;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.example.bancodedados.R;
 
-    // Construtor para receber os dados
-    public CardAdapter(List<String> items) {
-        this.items = items;
+import java.util.List;
+import java.util.Map;
+
+public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder> {
+
+    private final List<Map<String, Object>> salonList;
+
+    public CardAdapter(List<Map<String, Object>> salonList) {
+        this.salonList = salonList;
     }
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public CardViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_card, parent, false);
-        return new ViewHolder(view);
+        return new CardViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        // Bind dos dados
-        holder.textView.setText(items.get(position));
+    public void onBindViewHolder(@NonNull CardViewHolder holder, int position) {
+        Map<String, Object> salon = salonList.get(position);
+
+        // Obter os dados do salão
+        String name = (String) salon.get("name");
+        String imageUrl = (String) salon.get("url");
+
+        // Definir o nome no TextView
+        holder.cardText.setText(name);
+
+        // Usar Glide para carregar a imagem e aplicar a transformação circular
+        Glide.with(holder.itemView.getContext())
+                .load(imageUrl)
+                .circleCrop() // Torna a imagem circular
+                .into(holder.cardImage);
     }
+
 
     @Override
     public int getItemCount() {
-        return items.size();
+        return salonList.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView textView;
+    static class CardViewHolder extends RecyclerView.ViewHolder {
+        ImageView cardImage;
+        TextView cardText;
 
-        public ViewHolder(@NonNull View itemView) {
+        public CardViewHolder(@NonNull View itemView) {
             super(itemView);
-            textView = itemView.findViewById(R.id.card_text);
+            cardImage = itemView.findViewById(R.id.card_image);
+            cardText = itemView.findViewById(R.id.card_text);
         }
     }
 }
+
+

@@ -26,6 +26,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -39,12 +40,9 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
-        // Dados para o Carrossel
-        List<String> carouselItems = Arrays.asList("Card 1", "Card 2", "Card 3");
-
         RecyclerView carouselRecyclerView = findViewById(R.id.carousel_recycler_view);
         carouselRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        carouselRecyclerView.setAdapter(new CardAdapter(carouselItems)); // Passe a lista aqui
+        loadSalonDetails(carouselRecyclerView);
 
         // Dados para a Tabela
         RecyclerView tableRecyclerView = findViewById(R.id.table_recycler_view);
@@ -152,6 +150,54 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
+    private void loadSalonDetails(RecyclerView recyclerView) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+
+        db.collection("Salon")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        List<Map<String, Object>> salons = new ArrayList<>();
+                        for (DocumentSnapshot document : task.getResult()) {
+                            // Alterado para buscar "nome" em vez de "name"
+                            String name = document.getString("nome");
+                            String url = document.getString("url");
+
+                            if (name == null || name.isEmpty()) {
+                                Log.e("Firestore", "Nome do salão ausente ou vazio para o documento: " + document.getId());
+                                continue; // Ignorar este documento
+                            }
+
+                            if (url == null || url.isEmpty()) {
+                                Log.e("Firestore", "URL do salão ausente ou vazio para o documento: " + document.getId());
+                                continue; // Ignorar este documento
+                            }
+
+                            Log.d("Firestore", "Carregado: " + name + " - " + url);
+
+                            // Adicionar os dados à lista
+                            Map<String, Object> salon = new HashMap<>();
+                            salon.put("name", name); // Internamente ainda usaremos "name" como chave
+                            salon.put("url", url);
+                            salons.add(salon);
+                        }
+
+                        if (!salons.isEmpty()) {
+                            CardAdapter adapter = new CardAdapter(salons);
+                            recyclerView.setAdapter(adapter);
+                        } else {
+                            Log.d("Firestore", "Nenhum salão encontrado.");
+                        }
+                    } else {
+                        Log.e("Firestore", "Erro ao carregar dados da coleção Salon.", task.getException());
+                    }
+                });
+    }
 
 
 }
+
+
+
