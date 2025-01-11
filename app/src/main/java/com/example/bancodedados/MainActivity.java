@@ -102,7 +102,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
     private void loadPurchasedProducts(String userId) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -118,25 +117,40 @@ public class MainActivity extends AppCompatActivity {
                         if (produtosComprados != null) {
                             List<TableAdapter.RowItem> products = new ArrayList<>();
 
-                            // Iterar sobre os produtos comprados e adicionar ao adapter
+                            // Iterar sobre os 5 primeiros produtos comprados e adicionar ao adapter
+                            int count = 0; // Contador para limitar os itens
                             for (Map<String, Object> produto : produtosComprados) {
+                                if (count >= 5) break; // Interrompe após os 5 primeiros itens
+
                                 String nome = (String) produto.get("nome");
 
-                                // Verificar o tipo do campo "preco" e converter para String
-                                Object precoObj = produto.get("preco");
-                                String preco;
+                                // Verificar o tipo do campo "valor" e garantir que é tratado corretamente
+                                Object precoObj = produto.get("valor");
+                                String preco = "0"; // Valor padrão
 
-                                if (precoObj instanceof Number) {
-                                    // Converte Number para String (suporta Integer, Double, Long)
-                                    preco = String.valueOf(precoObj);
+                                if (precoObj != null) {
+                                    Log.d("PrecoObj", "Tipo de 'precoObj': " + precoObj.getClass().getSimpleName());
+
+                                    // Verificar se o precoObj é um número
+                                    if (precoObj instanceof Number) {
+                                        preco = String.valueOf(precoObj); // Converte Number para String
+                                        Log.d("Preco", "Preco (Number): " + preco);
+                                    } else if (precoObj instanceof String) {
+                                        preco = (String) precoObj; // Se for String, utiliza diretamente
+                                        Log.d("Preco", "Preco (String): " + preco);
+                                    } else {
+                                        Log.d("Preco", "Tipo de preco desconhecido, utilizando valor padrão.");
+                                    }
                                 } else {
-                                    preco = "0"; // Valor padrão caso o campo esteja ausente ou com tipo inesperado
+                                    Log.d("Preco", "Preco é null, utilizando valor padrão.");
                                 }
 
                                 if (nome != null && !nome.isEmpty()) {
                                     // Adicionar à lista de produtos
                                     products.add(new TableAdapter.RowItem(nome, preco));
                                 }
+
+                                count++; // Incrementa o contador
                             }
 
                             // Atualizar o adaptador com os dados carregados
@@ -149,6 +163,65 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
     }
+
+//TODO: Adicionar essa logica em uma pagina especifica para exibir o historico detalhado das compras
+
+//    private void loadPurchasedProducts(String userId) {
+//        FirebaseFirestore db = FirebaseFirestore.getInstance();
+//
+//        // Acessar o documento do usuário na coleção "Users"
+//        db.collection("Users").document(userId)
+//                .get()
+//                .addOnCompleteListener(task -> {
+//                    if (task.isSuccessful() && task.getResult() != null) {
+//                        // Verificar se o campo "produtosComprados" existe
+//                        List<Map<String, Object>> produtosComprados =
+//                                (List<Map<String, Object>>) task.getResult().get("produtosComprados");
+//
+//                        if (produtosComprados != null) {
+//                            List<TableAdapter.RowItem> products = new ArrayList<>();
+//
+//                            // Iterar sobre os produtos comprados e adicionar ao adapter
+//                            for (Map<String, Object> produto : produtosComprados) {
+//                                String nome = (String) produto.get("nome");
+//
+//                                // Verificar o tipo do campo "preco" e garantir que é tratado corretamente
+//                                Object precoObj = produto.get("valor");
+//                                String preco = "0"; // Valor padrão
+//
+//                                if (precoObj != null) {
+//                                    Log.d("PrecoObj", "Tipo de 'precoObj': " + precoObj.getClass().getSimpleName());
+//
+//                                    // Verificar se o precoObj é um número
+//                                    if (precoObj instanceof Number) {
+//                                        preco = String.valueOf(precoObj); // Converte Number para String
+//                                        Log.d("Preco", "Preco (Number): " + preco);
+//                                    } else if (precoObj instanceof String) {
+//                                        preco = (String) precoObj; // Se for String, utiliza diretamente
+//                                        Log.d("Preco", "Preco (String): " + preco);
+//                                    } else {
+//                                        Log.d("Preco", "Tipo de preco desconhecido, utilizando valor padrão.");
+//                                    }
+//                                } else {
+//                                    Log.d("Preco", "Preco é null, utilizando valor padrão.");
+//                                }
+//
+//                                if (nome != null && !nome.isEmpty()) {
+//                                    // Adicionar à lista de produtos
+//                                    products.add(new TableAdapter.RowItem(nome, preco));
+//                                }
+//                            }
+//
+//                            // Atualizar o adaptador com os dados carregados
+//                            tableAdapter.updateItems(products);
+//                        } else {
+//                            Log.d("Firestore", "O usuário não tem produtos comprados.");
+//                        }
+//                    } else {
+//                        Log.e("Firestore", "Erro ao carregar dados do usuário.", task.getException());
+//                    }
+//                });
+//    }
 
     private void loadSalonDetails(RecyclerView recyclerView) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();

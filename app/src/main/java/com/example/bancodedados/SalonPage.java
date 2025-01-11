@@ -4,19 +4,28 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class SalonPage extends AppCompatActivity {
+
+//    TODO: Logica para pegar o map de horarioFuncionamento no db para verificar se estar aberto ou fechado
 
     private LinearLayout servicesTableContainer;
     private LinearLayout productsTableContainer;
@@ -91,14 +100,17 @@ public class SalonPage extends AppCompatActivity {
             String valor = String.valueOf(item.get("valor"));
 
             // Inflar a linha usando o layout fornecido
-            View row = LayoutInflater.from(this).inflate(R.layout.item_table_row, container, false);
+            View row = LayoutInflater.from(this).inflate(R.layout.item_table_row_buy, container, false);
 
             // Configurar os dados nas colunas
             TextView nameCell = row.findViewById(R.id.product_name);
             TextView valueCell = row.findViewById(R.id.product_price);
+            ImageButton buyButton = row.findViewById(R.id.action_button);
 
             nameCell.setText(nome);
             valueCell.setText("R$ " + valor);
+
+            buyButton.setOnClickListener(v -> addProductToUserCart(nome, valor));
 
             // Adicionar a linha ao container
             container.addView(row);
@@ -139,7 +151,57 @@ public class SalonPage extends AppCompatActivity {
         // Configurar botões para alternar entre serviços e produtos
         tabServices.setOnClickListener(v -> switchTab(true));
         tabProducts.setOnClickListener(v -> switchTab(false));
+
     }
+
+    private void addProductToUserCart(String nome, String valor) {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (currentUser != null) {
+            String userId = currentUser.getUid();
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+            // Garantir que o valor seja tratado corretamente
+            double valorDouble = 0.0;
+            try {
+                // Substituir vírgula por ponto, caso o valor esteja formatado como "10,00"
+                String valorFormatado = valor.replace(",", ".");
+                valorDouble = Double.parseDouble(valorFormatado);
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+                Toast.makeText(this, "Erro no formato do valor: " + valor, Toast.LENGTH_SHORT).show();
+                return; // Parar a execução caso o valor seja inválido
+            }
+
+            // Criar o item com nome e valor convertido
+            Map<String, Object> novoItem = new HashMap<>();
+            novoItem.put("nome", nome);
+            novoItem.put("valor", valorDouble); // Salvar como número (double)
+
+            // Atualizar o array no Firestore (adiciona no topo)
+            db.collection("Users").document(userId).get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        List<Map<String, Object>> produtosExistentes = (List<Map<String, Object>>) documentSnapshot.get("produtosComprados");
+                        if (produtosExistentes == null) {
+                            produtosExistentes = new ArrayList<>();
+                        }
+
+                        // Adicionar o novo item no topo da lista
+                        produtosExistentes.add(0, novoItem);
+
+                        db.collection("Users").document(userId)
+                                .update("produtosComprados", produtosExistentes)
+                                .addOnSuccessListener(aVoid -> Toast.makeText(this, nome + " adicionado ao carrinho!", Toast.LENGTH_SHORT).show())
+                                .addOnFailureListener(e -> Toast.makeText(this, "Erro ao adicionar: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                    })
+                    .addOnFailureListener(e -> Toast.makeText(this, "Erro ao acessar o usuário: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+        } else {
+            Toast.makeText(this, "Usuário não está logado.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+
 
 }
 

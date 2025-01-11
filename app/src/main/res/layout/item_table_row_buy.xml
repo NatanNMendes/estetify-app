@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="16dp"
+    android:elevation="4dp"
+    android:gravity="center_vertical"
+    android:background="@drawable/table_row_background">
+
+    <!-- Primeira Coluna (Grande) -->
+    <TextView
+        android:id="@+id/product_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2.5"
+        android:text="Coluna Grande"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="#333333"
+        android:fontFamily="sans-serif-medium"
+        android:textSize="16sp"
+        android:gravity="center"
+        android:paddingEnd="16dp" />
+
+    <!-- Segunda Coluna (Média) -->
+    <TextView
+        android:id="@+id/product_price"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.5"
+        android:text="Coluna Média"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="#666666"
+        android:fontFamily="sans-serif"
+        android:textSize="14sp"
+        android:gravity="center"
+        android:paddingEnd="16dp" />
+
+    <!-- Terceira Coluna (Pequena - Botão) -->
+    <ImageButton
+        android:id="@+id/action_button"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/ic_buy"
+        android:background="@drawable/rounded_button"
+        android:contentDescription="Botão de compra"
+        android:scaleType="centerInside"
+        android:padding="4dp"/>
+</LinearLayout>
