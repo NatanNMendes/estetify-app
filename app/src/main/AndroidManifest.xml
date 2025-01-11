@@ -18,6 +18,9 @@
         android:theme="@style/Theme.BancoDeDados"
         tools:targetApi="31">
         <activity
+            android:name=".BaseActivity"
+            android:exported="false" />
+        <activity
             android:name=".SalonPage"
             android:exported="false" />
         <activity
