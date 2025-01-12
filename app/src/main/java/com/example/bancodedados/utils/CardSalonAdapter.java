@@ -101,6 +101,7 @@ public class CardSalonAdapter extends RecyclerView.Adapter<CardSalonAdapter.View
             // Intent para a tela do salão
             Intent intent = new Intent(context, SalonPage.class);
             intent.putExtra("salon_name", name); // Passar o nome do salão para a próxima tela
+            intent.putExtra("came_from", "MainActivity");
             context.startActivity(intent);
         });
     }

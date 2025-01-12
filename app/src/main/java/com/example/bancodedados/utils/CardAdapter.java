@@ -88,6 +88,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
             // Intent para abrir a SalonPage
             Context context = holder.itemView.getContext();
             Intent intent = new Intent(context, SalonPage.class);
+            intent.putExtra("came_from", "BusinessActivity");
             intent.putExtra("salon_name", name);
             intent.putExtra("salon_url", imageUrl);
             context.startActivity(intent);

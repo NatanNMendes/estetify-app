@@ -41,6 +41,14 @@ public abstract class BaseActivity extends AppCompatActivity {
                         finish();
                     }
                     return true;
+                } else if (itemId == R.id.nav_favorites) {
+                    if (!(BaseActivity.this instanceof HistoryActivity)) {
+                        Intent intent = new Intent(getApplicationContext(), HistoryActivity.class);
+                        startActivity(intent);
+                        overridePendingTransition(0, 0); // Sem animação
+                        finish();
+                    }
+                    return true;
                 } else if (itemId == R.id.nav_profile) {
                     if (!(BaseActivity.this instanceof PerfilActivity)) {
                         Intent intent = new Intent(getApplicationContext(), PerfilActivity.class);
@@ -50,6 +58,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                     }
                     return true;
                 }
+
                 return false;
             });
         } else {

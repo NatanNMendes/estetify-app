@@ -1,5 +1,6 @@
 package com.example.bancodedados;
 
+import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,14 +13,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.bancodedados.utils.Navigation;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class SalonPage extends BaseActivity {
@@ -38,6 +42,11 @@ public class SalonPage extends BaseActivity {
         setContentView(R.layout.activity_salon_page);
         setupBottomNavigation();
         updateBottomNavigationSelection(R.id.nav_search);
+
+        ImageButton backButton = findViewById(R.id.back_button);
+        Navigation navigation = new Navigation(this);
+
+        backButton.setOnClickListener(v -> navigation.navigationToBackScreen(SalonPage.this));
 
         // Referências para os elementos do layout
         TextView username = findViewById(R.id.username);
@@ -59,14 +68,17 @@ public class SalonPage extends BaseActivity {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("Salon")
                 .whereEqualTo("nome", salonName)
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful() && task.getResult() != null && !task.getResult().isEmpty()) {
-                        DocumentSnapshot document = task.getResult().getDocuments().get(0);
+                .addSnapshotListener((querySnapshot, e) -> {
+                    if (e != null) {
+                        Toast.makeText(this, "Erro ao buscar dados!", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                        DocumentSnapshot document = querySnapshot.getDocuments().get(0);
 
                         // Atualizar UI com os dados do salão
                         username.setText(document.getString("nome"));
-                        status.setText("ABERTO"); // Você pode adicionar lógica para verificar o status
 
                         Double avaliacoes = document.getDouble("avaliacoes");
                         if (avaliacoes != null) {
@@ -80,8 +92,16 @@ public class SalonPage extends BaseActivity {
                         if (imageUrl != null && !imageUrl.isEmpty()) {
                             Glide.with(this)
                                     .load(imageUrl) // Carregar a URL da imagem
-                                    .circleCrop() // Imagem de erro caso falhe
+                                    .circleCrop() // Imagem circular
                                     .into((ImageView) findViewById(R.id.salonImage)); // Definir no ImageView
+                        }
+
+                        // Verificar horário de funcionamento
+                        Map<String, Map<String, String>> horarioFuncionamento =
+                                (Map<String, Map<String, String>>) document.get("horarioFuncionamento");
+
+                        if (horarioFuncionamento != null) {
+                            verificarHorarioAtual(horarioFuncionamento, status);
                         }
 
                         // Carregar dados dinâmicos
@@ -166,6 +186,19 @@ public class SalonPage extends BaseActivity {
     }
 
     private void addProductToUserCart(String nome, String valor) {
+        // Verificar se o status do salão é "FECHADO"
+        TextView status = findViewById(R.id.status);
+        if ("FECHADO".equalsIgnoreCase(status.getText().toString())) {
+            // Exibir alerta
+            new androidx.appcompat.app.AlertDialog.Builder(this)
+                    .setTitle("Salão Fechado")
+                    .setMessage("O salão está fechado no momento. As compras só podem ser realizadas durante o horário de funcionamento.")
+                    .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
+                    .show();
+            return; // Impedir a execução da compra
+        }
+
+        // Continuar com o processo de adicionar ao carrinho se o salão estiver aberto
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
         if (currentUser != null) {
@@ -184,15 +217,21 @@ public class SalonPage extends BaseActivity {
                 return; // Parar a execução caso o valor seja inválido
             }
 
-            // Criar o item com nome e valor convertido
+            // Obter a data atual
+            String dataCompra = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+                    .format(Calendar.getInstance().getTime());
+
+            // Criar o item com nome, valor e data da compra
             Map<String, Object> novoItem = new HashMap<>();
             novoItem.put("nome", nome);
             novoItem.put("valor", valorDouble); // Salvar como número (double)
+            novoItem.put("dataCompra", dataCompra); // Adicionar a data de compra
 
             // Atualizar o array no Firestore (adiciona no topo)
             db.collection("Users").document(userId).get()
                     .addOnSuccessListener(documentSnapshot -> {
-                        List<Map<String, Object>> produtosExistentes = (List<Map<String, Object>>) documentSnapshot.get("produtosComprados");
+                        List<Map<String, Object>> produtosExistentes =
+                                (List<Map<String, Object>>) documentSnapshot.get("produtosComprados");
                         if (produtosExistentes == null) {
                             produtosExistentes = new ArrayList<>();
                         }
@@ -210,5 +249,62 @@ public class SalonPage extends BaseActivity {
             Toast.makeText(this, "Usuário não está logado.", Toast.LENGTH_SHORT).show();
         }
     }
+
+
+
+    private void verificarHorarioAtual(Map<String, Map<String, String>> horarioFuncionamento, TextView status) {
+        // Obter dia da semana atual e horário
+        Calendar calendar = Calendar.getInstance();
+        int diaSemana = calendar.get(Calendar.DAY_OF_WEEK);
+        String diaAtual = "";
+
+        // Mapear o dia da semana para os nomes no Firebase
+        switch (diaSemana) {
+            case Calendar.SUNDAY: diaAtual = "domingo"; break;
+            case Calendar.MONDAY: diaAtual = "segunda"; break;
+            case Calendar.TUESDAY: diaAtual = "terca"; break;
+            case Calendar.WEDNESDAY: diaAtual = "quarta"; break;
+            case Calendar.THURSDAY: diaAtual = "quinta"; break;
+            case Calendar.FRIDAY: diaAtual = "sexta"; break;
+            case Calendar.SATURDAY: diaAtual = "sabado"; break;
+        }
+
+        // Obter os horários do dia atual
+        Map<String, String> horarioDoDia = horarioFuncionamento.get(diaAtual);
+
+        if (horarioDoDia != null) {
+            String abre = horarioDoDia.get("abre");
+            String fecha = horarioDoDia.get("fecha");
+
+            if ("Fechado".equalsIgnoreCase(abre) || "Fechado".equalsIgnoreCase(fecha)) {
+                status.setText("FECHADO");
+                status.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
+                return;
+            }
+
+            // Obter o horário atual
+            String[] horaAtualSplit = new SimpleDateFormat("HH:mm").format(calendar.getTime()).split(":");
+            String[] horaAbreSplit = abre.split(":");
+            String[] horaFechaSplit = fecha.split(":");
+
+            int horaAtual = Integer.parseInt(horaAtualSplit[0]) * 60 + Integer.parseInt(horaAtualSplit[1]);
+            int horaAbre = Integer.parseInt(horaAbreSplit[0]) * 60 + Integer.parseInt(horaAbreSplit[1]);
+            int horaFecha = Integer.parseInt(horaFechaSplit[0]) * 60 + Integer.parseInt(horaFechaSplit[1]);
+
+            // Comparar horários
+            if (horaAtual >= horaAbre && horaAtual <= horaFecha) {
+                status.setText("ABERTO");
+                status.setTextColor(getResources().getColor(android.R.color.holo_green_dark));
+            } else {
+                status.setText("FECHADO");
+                status.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
+            }
+        } else {
+            status.setText("FECHADO");
+            status.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
+        }
+    }
+
+
 }
 
