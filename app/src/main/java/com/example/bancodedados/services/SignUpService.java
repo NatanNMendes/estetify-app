@@ -3,10 +3,10 @@ package com.example.bancodedados.services;
 import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
-
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import java.util.Objects;
 
 public class SignUpService {
@@ -47,12 +47,26 @@ public class SignUpService {
     private void registerUser(String email, String password, String username, Context context) {
         firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                firebaseUserService.saveUserData(Objects.requireNonNull(firebaseAuth.getCurrentUser()), context);
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    user.updateProfile(new UserProfileChangeRequest.Builder()
+                                    .setDisplayName(username)
+                                    .build())
+                            .addOnCompleteListener(updateTask -> {
+                                if (updateTask.isSuccessful()) {
+                                    firebaseUserService.saveUserData(user, context);
+                                } else {
+                                    Log.e(TAG, "Erro ao atualizar DisplayName", updateTask.getException());
+                                    showToast(context, "Erro ao salvar os dados do usuário.");
+                                }
+                            });
+                }
             } else {
                 handleAuthError(task.getException(), context);
             }
         });
     }
+
 
     private void handleAuthError(Exception exception, Context context) {
         String errorMessage = mensagens[2];

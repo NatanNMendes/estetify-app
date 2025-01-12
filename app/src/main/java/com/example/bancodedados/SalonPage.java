@@ -5,11 +5,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -34,6 +36,8 @@ public class SalonPage extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_salon_page);
+        setupBottomNavigation();
+        updateBottomNavigationSelection(R.id.nav_search);
 
         // Referências para os elementos do layout
         TextView username = findViewById(R.id.username);
@@ -71,6 +75,15 @@ public class SalonPage extends BaseActivity {
                             ratingBar.setRating(0f); // Valor padrão
                         }
 
+                        // Carregar URL da imagem do salão
+                        String imageUrl = document.getString("url");
+                        if (imageUrl != null && !imageUrl.isEmpty()) {
+                            Glide.with(this)
+                                    .load(imageUrl) // Carregar a URL da imagem
+                                    .circleCrop() // Imagem de erro caso falhe
+                                    .into((ImageView) findViewById(R.id.salonImage)); // Definir no ImageView
+                        }
+
                         // Carregar dados dinâmicos
                         List<Map<String, Object>> produtos = (List<Map<String, Object>>) document.get("produtos");
                         List<Map<String, Object>> servicos = (List<Map<String, Object>>) document.get("servicos");
@@ -87,6 +100,7 @@ public class SalonPage extends BaseActivity {
                         switchTab(true);
                     }
                 });
+
     }
 
     private void populateTable(LinearLayout container, List<Map<String, Object>> items) {
@@ -196,9 +210,5 @@ public class SalonPage extends BaseActivity {
             Toast.makeText(this, "Usuário não está logado.", Toast.LENGTH_SHORT).show();
         }
     }
-
-
-
-
 }
 

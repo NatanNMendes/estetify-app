@@ -6,12 +6,10 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-
 import com.example.bancodedados.services.SignUpService;
 import com.example.bancodedados.utils.Navigation;
 import com.example.bancodedados.utils.PasswordVisibility;
