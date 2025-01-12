@@ -1,10 +1,15 @@
 package com.example.bancodedados;
 
+import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Button;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -20,6 +25,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,7 +50,8 @@ public class MainActivity extends BaseActivity {
 
         RecyclerView carouselRecyclerView = findViewById(R.id.carousel_recycler_view);
         carouselRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        loadSalonDetails(carouselRecyclerView);
+//        loadSalonDetails(carouselRecyclerView);
+        setupCategoryButtons(carouselRecyclerView);
 
         // Dados para a Tabela
         RecyclerView tableRecyclerView = findViewById(R.id.table_recycler_view);
@@ -202,7 +210,7 @@ public class MainActivity extends BaseActivity {
 //                });
 //    }
 
-    private void loadSalonDetails(RecyclerView recyclerView) {
+    private void loadSalonDetails(RecyclerView recyclerView, List<String> selectedCategories) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
@@ -213,40 +221,119 @@ public class MainActivity extends BaseActivity {
                     if (task.isSuccessful() && task.getResult() != null) {
                         List<Map<String, Object>> salons = new ArrayList<>();
                         for (DocumentSnapshot document : task.getResult()) {
-                            // Alterado para buscar "nome" em vez de "name"
                             String name = document.getString("nome");
                             String url = document.getString("url");
+                            List<String> categories = (List<String>) document.get("categoria");
 
-                            if (name == null || name.isEmpty()) {
-                                Log.e("Firestore", "Nome do salão ausente ou vazio para o documento: " + document.getId());
-                                continue; // Ignorar este documento
+                            if (name == null || name.isEmpty() || url == null || url.isEmpty()) {
+                                continue; // Ignorar documentos inválidos
                             }
 
-                            if (url == null || url.isEmpty()) {
-                                Log.e("Firestore", "URL do salão ausente ou vazio para o documento: " + document.getId());
-                                continue; // Ignorar este documento
+                            if (selectedCategories.isEmpty() || (categories != null && !Collections.disjoint(categories, selectedCategories))) {
+                                Map<String, Object> salon = new HashMap<>();
+                                salon.put("name", name);
+                                salon.put("url", url);
+                                salons.add(salon);
                             }
-
-                            Log.d("Firestore", "Carregado: " + name + " - " + url);
-
-                            // Adicionar os dados à lista
-                            Map<String, Object> salon = new HashMap<>();
-                            salon.put("name", name); // Internamente ainda usaremos "name" como chave
-                            salon.put("url", url);
-                            salons.add(salon);
                         }
 
                         if (!salons.isEmpty()) {
                             CardAdapter adapter = new CardAdapter(salons);
                             recyclerView.setAdapter(adapter);
                         } else {
-                            Log.d("Firestore", "Nenhum salão encontrado.");
+                            Log.d("Firestore", "Nenhum salão encontrado para as categorias selecionadas.");
                         }
                     } else {
                         Log.e("Firestore", "Erro ao carregar dados da coleção Salon.", task.getException());
                     }
                 });
     }
+
+    private void setupCategoryButtons(RecyclerView recyclerView) {
+        List<String> selectedCategories = new ArrayList<>();
+        Drawable iconX = ContextCompat.getDrawable(this, R.drawable.ic_check); // Substitua pelo ícone "x" adequado
+        iconX.setBounds(0, 0, iconX.getIntrinsicWidth(), iconX.getIntrinsicHeight());
+
+        Button buttonCategory1 = findViewById(R.id.button_category1);
+        Button buttonCategory3 = findViewById(R.id.button_category3);
+        Button buttonCategory5 = findViewById(R.id.button_category5);
+        Button buttonCategory6 = findViewById(R.id.button_category6);
+        Button buttonCategory7 = findViewById(R.id.button_category7);
+        Button buttonCategory8 = findViewById(R.id.button_category8);
+
+        List<Button> categoryButtons = Arrays.asList(
+                buttonCategory1, buttonCategory3, buttonCategory5,
+                buttonCategory6, buttonCategory7, buttonCategory8
+        );
+
+        for (Button button : categoryButtons) {
+            button.setOnClickListener(v -> {
+                String category = button.getText().toString();
+                if (selectedCategories.contains(category)) {
+                    selectedCategories.remove(category);
+                    button.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#BCBCBC"))); // Cinza
+                    button.setCompoundDrawables(null, null, null, null); // Remove o ícone
+                } else {
+                    selectedCategories.add(category);
+                    button.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#6200EE"))); // Roxo
+                    button.setCompoundDrawables(null, null, iconX, null); // Adiciona o ícone no final
+                }
+
+                // Recarregar os salões filtrados
+                loadSalonDetails(recyclerView, selectedCategories);
+            });
+        }
+
+        // Carregar todos os salões inicialmente
+        loadSalonDetails(recyclerView, selectedCategories);
+    }
+
+
+//    private void loadSalonDetails(RecyclerView recyclerView) {
+//        FirebaseFirestore db = FirebaseFirestore.getInstance();
+//
+//        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+//
+//        db.collection("Salon")
+//                .get()
+//                .addOnCompleteListener(task -> {
+//                    if (task.isSuccessful() && task.getResult() != null) {
+//                        List<Map<String, Object>> salons = new ArrayList<>();
+//                        for (DocumentSnapshot document : task.getResult()) {
+//                            // Alterado para buscar "nome" em vez de "name"
+//                            String name = document.getString("nome");
+//                            String url = document.getString("url");
+//
+//                            if (name == null || name.isEmpty()) {
+//                                Log.e("Firestore", "Nome do salão ausente ou vazio para o documento: " + document.getId());
+//                                continue; // Ignorar este documento
+//                            }
+//
+//                            if (url == null || url.isEmpty()) {
+//                                Log.e("Firestore", "URL do salão ausente ou vazio para o documento: " + document.getId());
+//                                continue; // Ignorar este documento
+//                            }
+//
+//                            Log.d("Firestore", "Carregado: " + name + " - " + url);
+//
+//                            // Adicionar os dados à lista
+//                            Map<String, Object> salon = new HashMap<>();
+//                            salon.put("name", name); // Internamente ainda usaremos "name" como chave
+//                            salon.put("url", url);
+//                            salons.add(salon);
+//                        }
+//
+//                        if (!salons.isEmpty()) {
+//                            CardAdapter adapter = new CardAdapter(salons);
+//                            recyclerView.setAdapter(adapter);
+//                        } else {
+//                            Log.d("Firestore", "Nenhum salão encontrado.");
+//                        }
+//                    } else {
+//                        Log.e("Firestore", "Erro ao carregar dados da coleção Salon.", task.getException());
+//                    }
+//                });
+//    }
 
 
 }

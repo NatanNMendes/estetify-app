@@ -22,8 +22,12 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 public class PerfilActivity extends BaseActivity {
-    private TextView perfil_nome, perfil_email;
+    private TextView perfil_nome, perfil_email, perfil_data_criacao;
     private ImageView perfil_foto;
     private Button btn_sair;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -37,7 +41,7 @@ public class PerfilActivity extends BaseActivity {
         setupBottomNavigation();
         updateBottomNavigationSelection(R.id.nav_profile);
 
-        // Hide the action bar
+        // Oculta a ActionBar
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
         }
@@ -61,7 +65,6 @@ public class PerfilActivity extends BaseActivity {
                 finish();
             }
         });
-
     }
 
     @Override
@@ -79,7 +82,6 @@ public class PerfilActivity extends BaseActivity {
                 @Override
                 public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException error) {
                     if (error != null) {
-                        // Log de erro
                         Log.e("FirestoreError", error.getMessage());
                         return;
                     }
@@ -93,13 +95,21 @@ public class PerfilActivity extends BaseActivity {
                         String fotoUrl = documentSnapshot.getString("fotoPerfil");
                         if (fotoUrl != null && !fotoUrl.isEmpty()) {
                             Glide.with(PerfilActivity.this)
-                                    .load(fotoUrl) // URL da foto
-                                    .placeholder(R.drawable.ic_person) // Imagem padrão enquanto carrega
-                                    .error(R.drawable.ic_person) // Imagem caso ocorra erro
+                                    .load(fotoUrl)
+                                    .placeholder(R.drawable.ic_person)
+                                    .error(R.drawable.ic_person)
                                     .into(perfil_foto);
                         } else {
-                            // Se não houver foto, define a imagem padrão
                             perfil_foto.setImageResource(R.drawable.ic_person);
+                        }
+
+                        // Busca o campo 'dataCriacao' e converte para data legível
+                        Long dataCriacaoMillis = documentSnapshot.getLong("dataCriacao");
+                        if (dataCriacaoMillis != null) {
+                            String dataFormatada = converterMillisParaData(dataCriacaoMillis);
+                            perfil_data_criacao.setText("Conta criada em: " + dataFormatada);
+                        } else {
+                            perfil_data_criacao.setText("Data de criação não disponível.");
                         }
                     } else {
                         Log.d("Firestore", "Documento não encontrado.");
@@ -111,11 +121,18 @@ public class PerfilActivity extends BaseActivity {
         }
     }
 
+    // Converte o timestamp para uma data legível
+    private String converterMillisParaData(Long millis) {
+        Date date = new Date(millis);
+        SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
+        return formato.format(date);
+    }
 
-    private void IniciarComponentes(){
+    private void IniciarComponentes() {
         btn_sair = findViewById(R.id.btn_sair);
         perfil_nome = findViewById(R.id.perfil_nome);
         perfil_email = findViewById(R.id.perfil_email);
         perfil_foto = findViewById(R.id.perfil_foto);
+        perfil_data_criacao = findViewById(R.id.perfil_data_criacao); // Novo campo adicionado
     }
 }
