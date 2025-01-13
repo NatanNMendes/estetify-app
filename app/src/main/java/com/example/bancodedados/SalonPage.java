@@ -2,6 +2,8 @@ package com.example.bancodedados;
 
 import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -19,6 +21,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -33,7 +37,8 @@ public class SalonPage extends BaseActivity {
     private LinearLayout servicesTableContainer;
     private LinearLayout productsTableContainer;
     private Button tabProducts;
-
+    private Handler handler = new Handler();
+    private Runnable runnable;
     private Button tabServices;
 
     @Override
@@ -252,8 +257,61 @@ public class SalonPage extends BaseActivity {
 
 
 
+//    private void verificarHorarioAtual(Map<String, Map<String, String>> horarioFuncionamento, TextView status) {
+//        // Obter dia da semana atual e horário
+//        Calendar calendar = Calendar.getInstance();
+//        int diaSemana = calendar.get(Calendar.DAY_OF_WEEK);
+//        String diaAtual = "";
+//
+//        // Mapear o dia da semana para os nomes no Firebase
+//        switch (diaSemana) {
+//            case Calendar.SUNDAY: diaAtual = "domingo"; break;
+//            case Calendar.MONDAY: diaAtual = "segunda"; break;
+//            case Calendar.TUESDAY: diaAtual = "terca"; break;
+//            case Calendar.WEDNESDAY: diaAtual = "quarta"; break;
+//            case Calendar.THURSDAY: diaAtual = "quinta"; break;
+//            case Calendar.FRIDAY: diaAtual = "sexta"; break;
+//            case Calendar.SATURDAY: diaAtual = "sabado"; break;
+//        }
+//
+//        // Obter os horários do dia atual
+//        Map<String, String> horarioDoDia = horarioFuncionamento.get(diaAtual);
+//
+//        if (horarioDoDia != null) {
+//            String abre = horarioDoDia.get("abre");
+//            String fecha = horarioDoDia.get("fecha");
+//
+//            if ("Fechado".equalsIgnoreCase(abre) || "Fechado".equalsIgnoreCase(fecha)) {
+//                status.setText("FECHADO");
+//                status.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
+//                return;
+//            }
+//
+//            // Obter o horário atual
+//            String[] horaAtualSplit = new SimpleDateFormat("HH:mm").format(calendar.getTime()).split(":");
+//            String[] horaAbreSplit = abre.split(":");
+//            String[] horaFechaSplit = fecha.split(":");
+//
+//            int horaAtual = Integer.parseInt(horaAtualSplit[0]) * 60 + Integer.parseInt(horaAtualSplit[1]);
+//            int horaAbre = Integer.parseInt(horaAbreSplit[0]) * 60 + Integer.parseInt(horaAbreSplit[1]);
+//            int horaFecha = Integer.parseInt(horaFechaSplit[0]) * 60 + Integer.parseInt(horaFechaSplit[1]);
+//
+//            // Comparar horários
+//            if (horaAtual >= horaAbre && horaAtual <= horaFecha) {
+//                status.setText("ABERTO");
+//                status.setTextColor(getResources().getColor(android.R.color.holo_green_dark));
+//            } else {
+//                status.setText("FECHADO");
+//                status.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
+//            }
+//        } else {
+//            status.setText("FECHADO");
+//            status.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
+//        }
+//    }
+
     private void verificarHorarioAtual(Map<String, Map<String, String>> horarioFuncionamento, TextView status) {
-        // Obter dia da semana atual e horário
+        // Obter o dia da semana atual
         Calendar calendar = Calendar.getInstance();
         int diaSemana = calendar.get(Calendar.DAY_OF_WEEK);
         String diaAtual = "";
@@ -272,39 +330,53 @@ public class SalonPage extends BaseActivity {
         // Obter os horários do dia atual
         Map<String, String> horarioDoDia = horarioFuncionamento.get(diaAtual);
 
+        // Exibir o dia e a hora atual para debug
+        String horaAtualFormatada = new SimpleDateFormat("HH:mm").format(calendar.getTime());
+        Log.d("Horário Atual", "Dia: " + diaAtual + " | Hora Atual: " + horaAtualFormatada);
+
         if (horarioDoDia != null) {
             String abre = horarioDoDia.get("abre");
             String fecha = horarioDoDia.get("fecha");
 
+            // Se o horário estiver definido como "Fechado" em qualquer parte, o salão está fechado
             if ("Fechado".equalsIgnoreCase(abre) || "Fechado".equalsIgnoreCase(fecha)) {
                 status.setText("FECHADO");
-                status.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
+                status.setTextColor(status.getContext().getResources().getColor(android.R.color.holo_red_dark));
                 return;
             }
 
-            // Obter o horário atual
-            String[] horaAtualSplit = new SimpleDateFormat("HH:mm").format(calendar.getTime()).split(":");
-            String[] horaAbreSplit = abre.split(":");
-            String[] horaFechaSplit = fecha.split(":");
+            // Formatar horário para LocalTime
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+            LocalTime horaAtual = LocalTime.now();
+            LocalTime horaAbre = LocalTime.parse(abre, formatter);
+            LocalTime horaFecha = LocalTime.parse(fecha, formatter);
 
-            int horaAtual = Integer.parseInt(horaAtualSplit[0]) * 60 + Integer.parseInt(horaAtualSplit[1]);
-            int horaAbre = Integer.parseInt(horaAbreSplit[0]) * 60 + Integer.parseInt(horaAbreSplit[1]);
-            int horaFecha = Integer.parseInt(horaFechaSplit[0]) * 60 + Integer.parseInt(horaFechaSplit[1]);
-
-            // Comparar horários
-            if (horaAtual >= horaAbre && horaAtual <= horaFecha) {
-                status.setText("ABERTO");
-                status.setTextColor(getResources().getColor(android.R.color.holo_green_dark));
+            // Caso o horário de fechamento seja após a meia-noite (por exemplo, 23:00 - 01:00)
+            if (horaFecha.compareTo(horaAbre) < 0) {
+                // Funcionamento atravessa a meia-noite
+                if ((horaAtual.compareTo(horaAbre) >= 0) || horaAtual.compareTo(horaFecha) < 0) {
+                    status.setText("Hoje é " + diaAtual + ", " + horaAtualFormatada + ": ABERTO");
+                    status.setTextColor(status.getContext().getResources().getColor(android.R.color.holo_green_dark));
+                    return;
+                }
             } else {
-                status.setText("FECHADO");
-                status.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
+                // Funcionamento normal, sem atravessar a meia-noite
+                if (horaAtual.compareTo(horaAbre) >= 0 && horaAtual.compareTo(horaFecha) <= 0) {
+                    status.setText("Hoje é " + diaAtual + ", " + horaAtualFormatada + ": ABERTO");
+                    status.setTextColor(status.getContext().getResources().getColor(android.R.color.holo_green_dark));
+                    return;
+                }
             }
+
+            // Se não estiver dentro do horário de funcionamento
+            status.setText("Hoje é " + diaAtual + ", " + horaAtualFormatada + ": FECHADO");
+            status.setTextColor(status.getContext().getResources().getColor(android.R.color.holo_red_dark));
+
         } else {
-            status.setText("FECHADO");
-            status.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
+            // Se não houver horários definidos para o dia
+            status.setText("Hoje é " + diaAtual + ": FECHADO");
+            status.setTextColor(status.getContext().getResources().getColor(android.R.color.holo_red_dark));
         }
     }
-
-
 }
 
