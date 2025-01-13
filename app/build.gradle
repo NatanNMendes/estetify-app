@@ -7,6 +7,10 @@ android {
     namespace 'com.example.bancodedados'
     compileSdk 34
 
+    buildFeatures {
+        buildConfig true
+    }
+
     defaultConfig {
         applicationId "com.example.bancodedados"
         minSdk 24
@@ -15,6 +19,7 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField  "String", "OPENAI_API_KEY", '"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"'
     }
 
     buildTypes {
@@ -23,26 +28,57 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    // 🚀 Correção para conflitos de arquivos duplicados
+    packagingOptions {
+        exclude 'META-INF/INDEX.LIST'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/AL2.0'
+        exclude 'META-INF/LGPL2.1'
+    }
 }
 
 dependencies {
-
+    // Bibliotecas AndroidX
     implementation libs.appcompat
     implementation libs.material
     implementation libs.activity
     implementation libs.constraintlayout
+
+    // Firebase - Gerenciado pelo BOM
+    implementation platform('com.google.firebase:firebase-bom:32.2.2')
     implementation libs.firebase.auth
     implementation libs.firebase.database
     implementation libs.firebase.firestore
+
+    // Google Play Services (Login com Google)
+    implementation 'com.google.android.gms:play-services-auth:20.7.0'
+
+    // Glide - Carregamento de imagens
+    implementation 'com.github.bumptech.glide:glide:4.15.1'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.15.1'
+
+    // Retrofit para requisições HTTP
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+
+    // OkHttp para logging (opcional, mas útil para debug)
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.9.3'
+
+    // Biblioteca de manipulação de texto
+    implementation 'org.apache.commons:commons-text:1.9'
+
+    // Dependências para testes
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
-    implementation 'com.google.android.gms:play-services-auth:20.7.0'
-    implementation 'com.github.bumptech.glide:glide:4.15.1'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.15.1'
-    implementation platform('com.google.firebase:firebase-bom:32.2.2')
 }
