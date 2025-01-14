@@ -8,19 +8,38 @@
     android:background="#F9FAFB"
     tools:context=".BusinessActivity">
 
-    <androidx.appcompat.widget.SearchView
+<!--    <androidx.appcompat.widget.SearchView-->
+<!--        android:id="@+id/search_bar"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_margin="8dp"-->
+<!--        android:queryHint="Pesquisar..."-->
+<!--        android:background="@drawable/search_bar_background"-->
+<!--        android:elevation="2dp"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        android:focusable="true"-->
+<!--        android:clickable="true" />-->
+
+    <AutoCompleteTextView
         android:id="@+id/search_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        android:queryHint="Pesquisar..."
+        android:hint="Pesquisar..."
         android:background="@drawable/search_bar_background"
+        android:padding="12dp"
         android:elevation="2dp"
+        android:textColor="@android:color/black"
+        android:textSize="16sp"
+        android:inputType="text"
+        android:drawableStart="@android:drawable/ic_menu_search"
+        android:drawablePadding="8dp"
+        android:completionThreshold="1"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:focusable="true"
-        android:clickable="true" />
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
