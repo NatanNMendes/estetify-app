@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.bancodedados.utils.CardSalonAdapter;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,7 +30,12 @@ public class BusinessActivity extends BaseActivity {
     private CardSalonAdapter adapter;
     private ArrayAdapter<String> suggestionAdapter;
     private List<String> salonNames = new ArrayList<>();
+    private List<String> suggestions = new ArrayList<>();
 
+    /**
+     * Método chamado ao criar a BusinessActivity. Inicializa o layout e configura os elementos da interface.
+     * @see         #onCreate
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,28 +51,28 @@ public class BusinessActivity extends BaseActivity {
             return insets;
         });
 
-        // Configurar a SearchBar para abrir ao clicar
+        // Inicializa a SearchBar como AutoCompleteTextView
         searchBar = findViewById(R.id.search_bar);
 
-        // Configuração de RecyclerView
+        // Configuração do RecyclerView
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
-        // Configura o adaptador de sugestões
-        suggestionAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, salonNames);
+        // Inicializa o Adapter para sugestões
+        suggestionAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, suggestions);
         searchBar.setAdapter(suggestionAdapter);
 
-        // Carregar os dados dos salões para sugestões
+        // Carrega os dados dos salões para sugestões
         loadSalonNames();
 
-        // Listener para filtrar salões conforme a digitação
+        // Listener para atualizar sugestões em tempo real
         searchBar.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                filterSalons(s.toString());
+                updateSuggestions(s.toString());
             }
 
             @Override
@@ -78,10 +85,60 @@ public class BusinessActivity extends BaseActivity {
             filterSalons(selectedSalon); // Filtra com base na seleção
         });
 
-        // Carregar dados do Firestore
+        // Carregar os detalhes dos salões
         loadSalonDetails();
     }
 
+    /**
+     * A consulta de busca inserida pelo usuário na barra de pesquisa.
+     */
+    private void updateSuggestions(String query) {
+        suggestions.clear();
+        String normalizedQuery = normalizeText(query);
+
+        for (String name : salonNames) {
+            String normalizedName = normalizeText(name);
+
+            if (normalizedName.contains(normalizedQuery)) {
+                suggestions.add(name);
+            }
+        }
+
+        suggestionAdapter.clear();
+        suggestionAdapter.addAll(suggestions);
+        suggestionAdapter.notifyDataSetChanged();
+    }
+
+
+    /**
+     * Normaliza o texto removendo acentos e espaços.
+     */
+    private String normalizeText(String text) {
+        String normalized = Normalizer.normalize(text, Normalizer.Form.NFD);
+        normalized = normalized.replaceAll("[^\\p{ASCII}]", "");
+        return normalized.toLowerCase();
+    }
+
+
+    /**
+     * Verifica se a query é uma subsequência do nome (ex: "dvn" → "divina").
+     */
+    private boolean isSubsequence(String query, String target) {
+        int queryIndex = 0, targetIndex = 0;
+
+        while (queryIndex < query.length() && targetIndex < target.length()) {
+            if (query.charAt(queryIndex) == target.charAt(targetIndex)) {
+                queryIndex++;
+            }
+            targetIndex++;
+        }
+
+        return queryIndex == query.length();
+    }
+
+    /**
+     * Carrega os nomes dos salões do Firestore.
+     */
     private void loadSalonNames() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -101,21 +158,28 @@ public class BusinessActivity extends BaseActivity {
                 });
     }
 
+    /**
+     * Filtra os salões conforme a busca.
+     */
     private void filterSalons(String query) {
         filteredSalons.clear();
-        if (query.isEmpty()) {
-            filteredSalons.addAll(allSalons); // Se não houver texto, mostra todos os salões
-        } else {
-            for (Map<String, Object> salon : allSalons) {
-                String name = (String) salon.get("name");
-                if (name != null && name.toLowerCase().contains(query.toLowerCase())) {
-                    filteredSalons.add(salon); // Adiciona o salão à lista filtrada se o nome corresponder
-                }
+        String normalizedQuery = normalizeText(query);
+
+        for (Map<String, Object> salon : allSalons) {
+            String name = (String) salon.get("name");
+            if (name != null && (normalizeText(name).contains(normalizedQuery) || isSubsequence(normalizedQuery, normalizeText(name)))) {
+                filteredSalons.add(salon);
             }
         }
-        adapter.notifyDataSetChanged(); // Notifica o adapter que a lista foi atualizada
+
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
+        }
     }
 
+    /**
+     * Carrega detalhes completos dos salões.
+     */
     private void loadSalonDetails() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -123,7 +187,7 @@ public class BusinessActivity extends BaseActivity {
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful() && task.getResult() != null) {
-                        allSalons.clear(); // Limpa a lista antes de adicionar os novos salões
+                        allSalons.clear();
                         for (DocumentSnapshot document : task.getResult()) {
                             String name = document.getString("nome");
                             String url = document.getString("url");
@@ -143,9 +207,9 @@ public class BusinessActivity extends BaseActivity {
                         }
 
                         if (!allSalons.isEmpty()) {
-                            filteredSalons.addAll(allSalons); // Inicializa a lista filtrada com todos os salões
-                            adapter = new CardSalonAdapter(filteredSalons, this); // Cria o adapter com a lista filtrada
-                            recyclerView.setAdapter(adapter); // Configura o adapter para o RecyclerView
+                            filteredSalons.addAll(allSalons);
+                            adapter = new CardSalonAdapter(filteredSalons, this);
+                            recyclerView.setAdapter(adapter);
                         }
                     }
                 });
