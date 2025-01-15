@@ -37,7 +37,21 @@ app/
 │   │   └── UserPreferences.java           
 ├── res/                
 │   ├── drawable/
-│   │   └── logo.png    
+│   │   ├── background.xml
+│   │   ├── book.xml
+│   │   ├── button_background_black.xml
+│   │   ├── button_background_white.xml   
+│   │   ├── card_background.xml
+│   │   ├── card_image_background.xml
+│   │   ├── category_background.xml
+│   │   ├── clipboard.xml   
+│   │   ├── container_user.xml
+│   │   ├── house.xml       
+│   │   ├── ic_arrow_back.png
+│   │   ├── ic_buy.xml
+│   │   ├── ic_calendar.xml   
+│   │   ├── container_user.xml
+│   │   ├── house.xml 
 │   ├── layout/
 │   │   ├── activity_main.xml
 │   │   ├── activity_user.xml
