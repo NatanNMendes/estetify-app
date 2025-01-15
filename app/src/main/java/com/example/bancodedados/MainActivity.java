@@ -224,55 +224,6 @@ public class MainActivity extends BaseActivity {
         // Carregar todos os salões inicialmente
         loadSalonDetails(recyclerView, selectedCategories);
     }
-
-
-//    private void loadSalonDetails(RecyclerView recyclerView) {
-//        FirebaseFirestore db = FirebaseFirestore.getInstance();
-//
-//        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-//
-//        db.collection("Salon")
-//                .get()
-//                .addOnCompleteListener(task -> {
-//                    if (task.isSuccessful() && task.getResult() != null) {
-//                        List<Map<String, Object>> salons = new ArrayList<>();
-//                        for (DocumentSnapshot document : task.getResult()) {
-//                            // Alterado para buscar "nome" em vez de "name"
-//                            String name = document.getString("nome");
-//                            String url = document.getString("url");
-//
-//                            if (name == null || name.isEmpty()) {
-//                                Log.e("Firestore", "Nome do salão ausente ou vazio para o documento: " + document.getId());
-//                                continue; // Ignorar este documento
-//                            }
-//
-//                            if (url == null || url.isEmpty()) {
-//                                Log.e("Firestore", "URL do salão ausente ou vazio para o documento: " + document.getId());
-//                                continue; // Ignorar este documento
-//                            }
-//
-//                            Log.d("Firestore", "Carregado: " + name + " - " + url);
-//
-//                            // Adicionar os dados à lista
-//                            Map<String, Object> salon = new HashMap<>();
-//                            salon.put("name", name); // Internamente ainda usaremos "name" como chave
-//                            salon.put("url", url);
-//                            salons.add(salon);
-//                        }
-//
-//                        if (!salons.isEmpty()) {
-//                            CardAdapter adapter = new CardAdapter(salons);
-//                            recyclerView.setAdapter(adapter);
-//                        } else {
-//                            Log.d("Firestore", "Nenhum salão encontrado.");
-//                        }
-//                    } else {
-//                        Log.e("Firestore", "Erro ao carregar dados da coleção Salon.", task.getException());
-//                    }
-//                });
-//    }
-
-
 }
 
 

@@ -20,6 +20,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -31,8 +32,6 @@ import java.util.Locale;
 import java.util.Map;
 
 public class SalonPage extends BaseActivity {
-
-//    TODO: Logica para pegar o map de horarioFuncionamento no db para verificar se estar aberto ou fechado
 
     private LinearLayout servicesTableContainer;
     private LinearLayout productsTableContainer;
@@ -107,6 +106,8 @@ public class SalonPage extends BaseActivity {
 
                         if (horarioFuncionamento != null) {
                             verificarHorarioAtual(horarioFuncionamento, status);
+                        }else {
+                            Log.d("Firestore", "Horário de funcionamento não encontrado para o salão " + salonName);
                         }
 
                         // Carregar dados dinâmicos
@@ -125,7 +126,6 @@ public class SalonPage extends BaseActivity {
                         switchTab(true);
                     }
                 });
-
     }
 
     private void populateTable(LinearLayout container, List<Map<String, Object>> items) {
@@ -254,61 +254,6 @@ public class SalonPage extends BaseActivity {
             Toast.makeText(this, "Usuário não está logado.", Toast.LENGTH_SHORT).show();
         }
     }
-
-
-
-//    private void verificarHorarioAtual(Map<String, Map<String, String>> horarioFuncionamento, TextView status) {
-//        // Obter dia da semana atual e horário
-//        Calendar calendar = Calendar.getInstance();
-//        int diaSemana = calendar.get(Calendar.DAY_OF_WEEK);
-//        String diaAtual = "";
-//
-//        // Mapear o dia da semana para os nomes no Firebase
-//        switch (diaSemana) {
-//            case Calendar.SUNDAY: diaAtual = "domingo"; break;
-//            case Calendar.MONDAY: diaAtual = "segunda"; break;
-//            case Calendar.TUESDAY: diaAtual = "terca"; break;
-//            case Calendar.WEDNESDAY: diaAtual = "quarta"; break;
-//            case Calendar.THURSDAY: diaAtual = "quinta"; break;
-//            case Calendar.FRIDAY: diaAtual = "sexta"; break;
-//            case Calendar.SATURDAY: diaAtual = "sabado"; break;
-//        }
-//
-//        // Obter os horários do dia atual
-//        Map<String, String> horarioDoDia = horarioFuncionamento.get(diaAtual);
-//
-//        if (horarioDoDia != null) {
-//            String abre = horarioDoDia.get("abre");
-//            String fecha = horarioDoDia.get("fecha");
-//
-//            if ("Fechado".equalsIgnoreCase(abre) || "Fechado".equalsIgnoreCase(fecha)) {
-//                status.setText("FECHADO");
-//                status.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
-//                return;
-//            }
-//
-//            // Obter o horário atual
-//            String[] horaAtualSplit = new SimpleDateFormat("HH:mm").format(calendar.getTime()).split(":");
-//            String[] horaAbreSplit = abre.split(":");
-//            String[] horaFechaSplit = fecha.split(":");
-//
-//            int horaAtual = Integer.parseInt(horaAtualSplit[0]) * 60 + Integer.parseInt(horaAtualSplit[1]);
-//            int horaAbre = Integer.parseInt(horaAbreSplit[0]) * 60 + Integer.parseInt(horaAbreSplit[1]);
-//            int horaFecha = Integer.parseInt(horaFechaSplit[0]) * 60 + Integer.parseInt(horaFechaSplit[1]);
-//
-//            // Comparar horários
-//            if (horaAtual >= horaAbre && horaAtual <= horaFecha) {
-//                status.setText("ABERTO");
-//                status.setTextColor(getResources().getColor(android.R.color.holo_green_dark));
-//            } else {
-//                status.setText("FECHADO");
-//                status.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
-//            }
-//        } else {
-//            status.setText("FECHADO");
-//            status.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
-//        }
-//    }
 
     private void verificarHorarioAtual(Map<String, Map<String, String>> horarioFuncionamento, TextView status) {
         // Obter o dia da semana atual
