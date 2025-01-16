@@ -98,20 +98,49 @@ app/
 
 ## Descrição dos Diretórios e Arquivos
 
-- **app/**: Pasta raiz contendo todos os arquivos essenciais do aplicativo Android.
+## manifests/:
+  - `AndroidManifest.xml`: Arquivo fundamental que define as configurações básicas do app, como permissões, atividades, e serviços.
 
-  - **manifests/**: Contém os arquivos de cabeçalho para as funções e estruturas.
-    - `AndroidManifest.xml`: Arquivo fundamental que define as configurações básicas do app, como permissões, atividades, e serviços.
+## java/:
+- **com.example.bancodedados**
+  - `**models/**:
+      - `Product.java`:  Modelo de dados representando produtos.
+  - `**services/**:
+      - `FirebaseUserService.java`: Gerencia autenticação e interação com o Firebase.
+      - `SignInGoogleService.java`: Implementa login com Google.
+      - `SignInService.java`: Lida com o processo de login padrão.
+      - `SignUpService.java`: Gerencia o cadastro de novos usuários.
+  - `**utils/**:
+      - `AdapterCard.java`: Adapta dados para exibição em cartões.
+      - `AdapterCardSalon.java`: Adapta dados de salões em cartões.
+      - `AdapterTable.java`: Adapta dados para tabelas.
+      - `AdapterTableHistory.java`: Adapta o histórico de ações em tabelas.
+      - `Navigation.java`: Auxilia na navegação entre telas.
+      - `PasswordVisibility.java`: Alterna a visibilidade da senha.
+  - `BaseActivity.java`: Classe base da bottom navigation com funcionalidades comuns às demais atividades.
+  - `BusinessActivity.java`: Tela para exibir e pesquisar salões.
+  - `HistoryActivity.java`: Tela para exibir o histórico de compras do usuário separado por mês.
+  - `LoginActivity.java`: Tela de login.
+  - `MainActivity.java`: Tela principal do aplicativo.
+  - `PerfilActivity.java`: Tela de perfil do usuário.
+  - `SalonPage.java`: Tela de detalhes de salões.
+  - `SignInActivity.java`: Tela de login.
+  - `SignUpActivity.java`:Tela de cadastro de novos usuários.
+  - `StartScreen.java`: Tela inicial de boas-vindas.
+  - `CredentialManagerHelper.java`: Gerencia credenciais do usuário.
+  - `UserPreferences.java`: Gerencia preferências e configurações do usuário.
 
-  - **java/**: Contém o código-fonte Java dividido por pacotes.
-
-    - **com.example.bancodedados/**: Pacote principal da aplicação.
-
-      - **models/**: Diretório criado durante o processo de build, onde os arquivos compilados são armazenados.
-        - `AndroidManifest.xml`: Arquivo fundamental que define as configurações básicas do app, como permissões, atividades, e serviços.
-
-- **Makefile**: Arquivo de automação para compilar e gerar a aplicação a partir do código-fonte.
-
+## res/:
+  - `**drawable/**:
+    - `custom_background.xml`:  Modelo de dados representando produtos.
+  - `**layout/**:
+    - `custom_background.xml`:  Modelo de dados representando produtos.
+  - `**menu/**:
+    - `bottom_navigation_menu.xml`: Menu inferior de navegação
+  - `**values/**:
+    - `colors.xml`: Paleta de cores do app.
+    - `strings.xml`: Textos e mensagens do app.
+    
 ## Compilação e Execução
 
 1. Para compilar o projeto, use o comando:
