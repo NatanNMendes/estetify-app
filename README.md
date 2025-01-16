@@ -67,7 +67,7 @@ app/
 │   │   ├── ic_user.xml
 │   │   ├── ic_visibility_off.xml
 │   │   ├── ic_visibility_on.xml   
-[//]: # (custom icon)
+[//]: # (custom image)
 │   │   └── image_start_screen.xml
 │   ├── layout/
 │   │   ├── activity_main.xml
