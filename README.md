@@ -132,8 +132,7 @@ app/
 
 #### res/:
   - **drawable/**:
-
-[//]: (&#40;custom layouts&#41;)
+    - **custom layouts**
     - `custom_background.xml`:  Modelo de dados representando produtos.
     - `custom_background_button.xml`:  Modelo de dados representando produtos.
     - `custom_background_button_black.xml`:  Modelo de dados representando produtos.
@@ -144,7 +143,7 @@ app/
     - `custom_background_table_row.xml`:  Modelo de dados representando produtos.
     - `custom_container_user.xml`:  Modelo de dados representando produtos.
     - `custom_rounded_button.xml`:  Modelo de dados representando produtos.
-[//]: (&#40;custom icon&#41;)
+    - **custom icon**
     - `ic_arrow_left.xml`:  Modelo de dados representando produtos.
     - `ic_book.xml`:  Modelo de dados representando produtos.
     - `ic_buy.xml`:  Modelo de dados representando produtos.
