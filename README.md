@@ -133,8 +133,8 @@ app/
 #### res/:
   - **drawable/**:
     - **custom layouts**
-    - `custom_background.xml`:  Modelo de dados representando produtos.
-    - `custom_background_button.xml`:  Modelo de dados representando produtos.
+    - `custom_background.xml`: Plano de fundo personalizado.
+    - `custom_background_button.xml`: Estilo de botão personalizado.
     - `custom_background_button_black.xml`:  Modelo de dados representando produtos.
     - `custom_background_card.xml`:  Modelo de dados representando produtos.
     - `custom_background_card_image.xml`:  Modelo de dados representando produtos.
@@ -144,7 +144,7 @@ app/
     - `custom_container_user.xml`:  Modelo de dados representando produtos.
     - `custom_rounded_button.xml`:  Modelo de dados representando produtos.
     - **custom icon**
-    - `ic_arrow_left.xml`:  Modelo de dados representando produtos.
+    - `ic_arrow_left.xml`: Ícone de seta para voltar.
     - `ic_book.xml`:  Modelo de dados representando produtos.
     - `ic_buy.xml`:  Modelo de dados representando produtos.
     - `ic_calendar.xml`:  Modelo de dados representando produtos.
@@ -154,7 +154,7 @@ app/
     - `ic_check.xml`:  Modelo de dados representando produtos.
     - `ic_clipboard.xml`:  Modelo de dados representando produtos.
     - `ic_email.xml`:  Modelo de dados representando produtos.
-    - `ic_google_logo.xml`:  Modelo de dados representando produtos.
+    - `ic_google_logo.xml`: Ícone do Google.
     - `ic_house.xml`:  Modelo de dados representando produtos.
     - `ic_launcher_background.xml`:  Modelo de dados representando produtos.
     - `ic_launcher_foreground.xml`:  Modelo de dados representando produtos.
@@ -165,11 +165,11 @@ app/
     - `ic_visibility_off.xml`:  Modelo de dados representando produtos.
     - `ic_visibility_on.xml`:  Modelo de dados representando produtos.
     - **custom image**
-    - `image_start_screen.xml`:  Modelo de dados representando produtos.
+    - `image_start_screen.xml`: Imagem da tela inicial.
   - **layout/**:
     - **activitys**
-    - `activity_base.xml`:  Modelo de dados representando produtos.
-    - `activity_business.xml`:  Modelo de dados representando produtos.
+    - `activity_base.xml`: Layout da tela de login.
+    - `activity_business.xml`: Layout da tela principal.
     - `activity_history.xml`:  Modelo de dados representando produtos.
     - `activity_login.xml`:  Modelo de dados representando produtos.
     - `activity_main.xml`:  Modelo de dados representando produtos.
@@ -178,11 +178,11 @@ app/
     - `activity_sign_up.xml`:  Modelo de dados representando produtos.
     - `activity_start_screen.xml`:  Modelo de dados representando produtos.
     - **items**
-    - `item_card.xml`:  Modelo de dados representando produtos.
+    - `item_card.xml`: Layout dos cards exibidos na MainActivity.
     - `item_card_salon.xml`:  Modelo de dados representando produtos.
     - `item_header.xml`:  Modelo de dados representando produtos.
     - `item_row.xml`:  Modelo de dados representando produtos.
-    - `item_table_row.xml`:  Modelo de dados representando produtos.
+    - `item_table_row.xml`: Layout de linha de tabela
     - `item_table_row_buy.xml`:  Modelo de dados representando produtos.
   - **menu/**:
     - `bottom_navigation_menu.xml`: Menu inferior de navegação
