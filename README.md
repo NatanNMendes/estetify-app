@@ -131,11 +131,11 @@ app/
   - `UserPreferences.java`: Gerencia preferências e configurações do usuário.
 
 #### res/:
-  - `**drawable/**:
+  - **drawable/**:
     - `custom_background.xml`:  Modelo de dados representando produtos.
-  - `**layout/**:
+  - **layout/**:
     - `custom_background.xml`:  Modelo de dados representando produtos.
-  - `**menu/**:
+  - `**menu/**`:
     - `bottom_navigation_menu.xml`: Menu inferior de navegação
   - `**values/**:
     - `colors.xml`: Paleta de cores do app.
