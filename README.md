@@ -151,9 +151,39 @@ app/
     - `ic_arrow_left.xml`:  Modelo de dados representando produtos.
     - `ic_book.xml`:  Modelo de dados representando produtos.
     - `ic_buy.xml`:  Modelo de dados representando produtos.
-    - `ic_calendar.xml`:  Modelo de dados representando produtos.
+    - `ic_check.xml`:  Modelo de dados representando produtos.
+    - `ic_clipboard.xml`:  Modelo de dados representando produtos.
+    - `ic_email.xml`:  Modelo de dados representando produtos.
+    - `ic_google_logo.xml`:  Modelo de dados representando produtos.
+    - `ic_house.xml`:  Modelo de dados representando produtos.
+    - `ic_launcher_background.xml`:  Modelo de dados representando produtos.
+    - `ic_launcher_foreground.xml`:  Modelo de dados representando produtos.
+    - `ic_location.xml`:  Modelo de dados representando produtos.
+    - `ic_logo.xml`:  Modelo de dados representando produtos.
+    - `ic_person.xml`:  Modelo de dados representando produtos.
+    - `ic_user.xml`:  Modelo de dados representando produtos.
+    - `ic_visibility_off.xml`:  Modelo de dados representando produtos.
+    - `ic_visibility_on.xml`:  Modelo de dados representando produtos.
+    - **custom image**
+    - `image_start_screen.xml`:  Modelo de dados representando produtos.
   - **layout/**:
-    - `custom_background.xml`:  Modelo de dados representando produtos.
+    - **activitys**
+    - `activity_base.xml`:  Modelo de dados representando produtos.
+    - `activity_business.xml`:  Modelo de dados representando produtos.
+    - `activity_history.xml`:  Modelo de dados representando produtos.
+    - `activity_login.xml`:  Modelo de dados representando produtos.
+    - `activity_main.xml`:  Modelo de dados representando produtos.
+    - `activity_perfil.xml`:  Modelo de dados representando produtos.
+    - `activity_salon_page.xml`:  Modelo de dados representando produtos.
+    - `activity_sign_up.xml`:  Modelo de dados representando produtos.
+    - `activity_start_screen.xml`:  Modelo de dados representando produtos.
+    - **items**
+    - `item_card.xml`:  Modelo de dados representando produtos.
+    - `item_card_salon.xml`:  Modelo de dados representando produtos.
+    - `item_header.xml`:  Modelo de dados representando produtos.
+    - `item_row.xml`:  Modelo de dados representando produtos.
+    - `item_table_row.xml`:  Modelo de dados representando produtos.
+    - `item_table_row_buy.xml`:  Modelo de dados representando produtos.
   - **menu/**:
     - `bottom_navigation_menu.xml`: Menu inferior de navegação
   - **values/**:
