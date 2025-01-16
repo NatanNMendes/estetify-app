@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -20,23 +19,7 @@ import com.example.bancodedados.R;
 import java.util.List;
 import java.util.Map;
 
-import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.bumptech.glide.Glide;
-import com.example.bancodedados.R;
 import com.example.bancodedados.SalonPage;
-
-import java.util.List;
-import java.util.Map;
 
 public class CardSalonAdapter extends RecyclerView.Adapter<CardSalonAdapter.ViewHolder> {
 
@@ -51,7 +34,7 @@ public class CardSalonAdapter extends RecyclerView.Adapter<CardSalonAdapter.View
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_salon, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_card_salon, parent, false);
         return new ViewHolder(view);
     }
 
@@ -89,7 +72,7 @@ public class CardSalonAdapter extends RecyclerView.Adapter<CardSalonAdapter.View
                 categoryView.setPadding(12, 4, 12, 4);
                 categoryView.setTextSize(12);
                 categoryView.setTextColor(context.getResources().getColor(android.R.color.white));
-                categoryView.setBackground(context.getDrawable(R.drawable.category_background));
+                categoryView.setBackground(context.getDrawable(R.drawable.custom_background_category));
                 GridLayout.LayoutParams params = new GridLayout.LayoutParams();
                 params.setMargins(8, 8, 8, 8);
                 holder.categoryContainer.addView(categoryView, params);

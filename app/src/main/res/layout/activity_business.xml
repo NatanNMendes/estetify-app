@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:hint="Pesquisar..."
-        android:background="@drawable/search_bar_background"
+        android:background="@drawable/custom_background_search_bar"
         android:padding="12dp"
         android:elevation="2dp"
         android:textColor="@android:color/black"
@@ -52,7 +52,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        tools:listitem="@layout/card_salon" />
+        tools:listitem="@layout/item_card_salon" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"

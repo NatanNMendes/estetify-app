@@ -6,7 +6,7 @@
     android:orientation="horizontal"
     android:padding="16dp"
     android:elevation="4dp"
-    android:background="@drawable/table_row_background">
+    android:background="@drawable/custom_background_table_row">
 
     <!-- Primeira Coluna (Maior) -->
     <TextView

@@ -7,7 +7,7 @@
     android:padding="8dp"
     android:gravity="center"
     android:elevation="6dp"
-    android:background="@drawable/card_background"
+    android:background="@drawable/custom_background_card"
     android:layout_margin="8dp">
 
     <!-- Imagem -->
@@ -17,7 +17,7 @@
         android:layout_height="96dp"
         android:layout_marginBottom="12dp"
         android:scaleType="centerCrop"
-        android:background="@drawable/card_image_background" />
+        android:background="@drawable/custom_background_card_image" />
 
     <!-- Texto -->
     <TextView
