@@ -96,12 +96,12 @@ app/
 │   │   └── strings.xml   
 ```
 
-## Descrição dos Diretórios e Arquivos
+### Descrição dos Diretórios e Arquivos
 
-## manifests/:
+#### manifests/:
   - `AndroidManifest.xml`: Arquivo fundamental que define as configurações básicas do app, como permissões, atividades, e serviços.
 
-## java/:
+#### java/:
 - **com.example.bancodedados**
   - `**models/**:
       - `Product.java`:  Modelo de dados representando produtos.
@@ -130,7 +130,7 @@ app/
   - `CredentialManagerHelper.java`: Gerencia credenciais do usuário.
   - `UserPreferences.java`: Gerencia preferências e configurações do usuário.
 
-## res/:
+#### res/:
   - `**drawable/**:
     - `custom_background.xml`:  Modelo de dados representando produtos.
   - `**layout/**:
