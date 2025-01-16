@@ -17,27 +17,13 @@ import com.example.bancodedados.R;
 import java.util.List;
 import java.util.Map;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.bumptech.glide.Glide;
-import com.example.bancodedados.R;
 import com.example.bancodedados.SalonPage;
 
-import java.util.List;
-import java.util.Map;
-
-public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder> {
+public class AdapterCard extends RecyclerView.Adapter<AdapterCard.CardViewHolder> {
 
     private final List<Map<String, Object>> salonList;
 
-    public CardAdapter(List<Map<String, Object>> salonList) {
+    public AdapterCard(List<Map<String, Object>> salonList) {
         this.salonList = salonList;
     }
 

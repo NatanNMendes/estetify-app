@@ -12,8 +12,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.example.bancodedados.TableAdapter;
-import com.example.bancodedados.utils.CardAdapter;
+
+import com.example.bancodedados.utils.AdapterCard;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -29,7 +29,7 @@ import java.util.Map;
 
 public class MainActivity extends BaseActivity {
 
-    private TableAdapter tableAdapter;
+    private com.example.bancodedados.AdapterTable adapterTable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,8 +54,8 @@ public class MainActivity extends BaseActivity {
         tableRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // Inicializar o adaptador vazio e atualizá-lo posteriormente
-        tableAdapter = new TableAdapter(new ArrayList<>());
-        tableRecyclerView.setAdapter(tableAdapter);
+        adapterTable = new com.example.bancodedados.AdapterTable(new ArrayList<>());
+        tableRecyclerView.setAdapter(adapterTable);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -98,7 +98,7 @@ public class MainActivity extends BaseActivity {
                                 (List<Map<String, Object>>) task.getResult().get("produtosComprados");
 
                         if (produtosComprados != null) {
-                            List<TableAdapter.RowItem> products = new ArrayList<>();
+                            List<com.example.bancodedados.AdapterTable.RowItem> products = new ArrayList<>();
 
                             // Iterar sobre os 5 primeiros produtos comprados e adicionar ao adapter
                             int count = 0; // Contador para limitar os itens
@@ -130,14 +130,14 @@ public class MainActivity extends BaseActivity {
 
                                 if (nome != null && !nome.isEmpty()) {
                                     // Adicionar à lista de produtos
-                                    products.add(new TableAdapter.RowItem(nome, preco));
+                                    products.add(new com.example.bancodedados.AdapterTable.RowItem(nome, preco));
                                 }
 
                                 count++; // Incrementa o contador
                             }
 
                             // Atualizar o adaptador com os dados carregados
-                            tableAdapter.updateItems(products);
+                            adapterTable.updateItems(products);
                         } else {
                             Log.d("Firestore", "O usuário não tem produtos comprados.");
                         }
@@ -175,7 +175,7 @@ public class MainActivity extends BaseActivity {
                         }
 
                         if (!salons.isEmpty()) {
-                            CardAdapter adapter = new CardAdapter(salons);
+                            AdapterCard adapter = new AdapterCard(salons);
                             recyclerView.setAdapter(adapter);
                         } else {
                             Log.d("Firestore", "Nenhum salão encontrado para as categorias selecionadas.");

@@ -11,7 +11,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.example.bancodedados.utils.CardSalonAdapter;
+import com.example.bancodedados.utils.AdapterCardSalon;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -27,7 +27,7 @@ public class BusinessActivity extends BaseActivity {
     private RecyclerView recyclerView;
     private List<Map<String, Object>> allSalons = new ArrayList<>();
     private List<Map<String, Object>> filteredSalons = new ArrayList<>();
-    private CardSalonAdapter adapter;
+    private AdapterCardSalon adapter;
     private ArrayAdapter<String> suggestionAdapter;
     private List<String> salonNames = new ArrayList<>();
     private List<String> suggestions = new ArrayList<>();
@@ -208,7 +208,7 @@ public class BusinessActivity extends BaseActivity {
 
                         if (!allSalons.isEmpty()) {
                             filteredSalons.addAll(allSalons);
-                            adapter = new CardSalonAdapter(filteredSalons, this);
+                            adapter = new AdapterCardSalon(filteredSalons, this);
                             recyclerView.setAdapter(adapter);
                         }
                     }

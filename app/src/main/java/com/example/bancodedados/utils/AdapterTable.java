@@ -8,13 +8,13 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
-public class TableAdapter extends RecyclerView.Adapter<TableAdapter.ViewHolder> {
+public class AdapterTable extends RecyclerView.Adapter<AdapterTable.ViewHolder> {
 
     // Lista para armazenar objetos com dados dos produtos
     private List<RowItem> items;
 
     // Construtor para receber os dados
-    public TableAdapter(List<RowItem> items) {
+    public AdapterTable(List<RowItem> items) {
         this.items = items;
     }
 

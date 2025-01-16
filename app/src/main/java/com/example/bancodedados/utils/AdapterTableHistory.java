@@ -10,14 +10,14 @@ import java.util.List;
 import java.util.ArrayList;
 
 
-public class TableHistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class AdapterTableHistory extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final int VIEW_TYPE_HEADER = 0;
     private static final int VIEW_TYPE_ITEM = 1;
 
     private List<GroupedRowItem> groupedItems;
 
-    public TableHistoryAdapter(List<GroupedRowItem> groupedItems) {
+    public AdapterTableHistory(List<GroupedRowItem> groupedItems) {
         this.groupedItems = groupedItems != null ? groupedItems : new ArrayList<>();
     }
 

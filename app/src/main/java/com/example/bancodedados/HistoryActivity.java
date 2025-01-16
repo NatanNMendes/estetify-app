@@ -4,14 +4,12 @@ import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.example.bancodedados.TableAdapter;
-import com.example.bancodedados.utils.TableHistoryAdapter;
+import com.example.bancodedados.utils.AdapterTableHistory;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -27,7 +25,7 @@ import java.util.Map;
 
 public class HistoryActivity extends BaseActivity {
 
-    private TableHistoryAdapter tableHistoryAdapter;
+    private AdapterTableHistory adapterTableHistory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,8 +39,8 @@ public class HistoryActivity extends BaseActivity {
         tableRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // Inicializar o adaptador vazio e atualizá-lo posteriormente
-        tableHistoryAdapter = new TableHistoryAdapter(new ArrayList<>());
-        tableRecyclerView.setAdapter(tableHistoryAdapter);
+        adapterTableHistory = new AdapterTableHistory(new ArrayList<>());
+        tableRecyclerView.setAdapter(adapterTableHistory);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -90,7 +88,7 @@ public class HistoryActivity extends BaseActivity {
                                 (List<Map<String, Object>>) task.getResult().get("produtosComprados");
 
                         if (produtosComprados != null) {
-                            Map<String, List<TableHistoryAdapter.RowItem>> groupedProducts = new HashMap<>();
+                            Map<String, List<AdapterTableHistory.RowItem>> groupedProducts = new HashMap<>();
                             Map<String, Date> dateMap = new HashMap<>(); // Map para armazenar as datas reais para ordenação
 
                             // Iterar sobre os produtos comprados e agrupá-los por mês e ano
@@ -122,7 +120,7 @@ public class HistoryActivity extends BaseActivity {
 
                                         // Agrupar produtos por mês e ano
                                         groupedProducts.computeIfAbsent(monthYear, k -> new ArrayList<>())
-                                                .add(new TableHistoryAdapter.RowItem(nome, preco));
+                                                .add(new AdapterTableHistory.RowItem(nome, preco));
                                     } catch (Exception e) {
                                         Log.e("DataCompra", "Erro ao formatar data de compra", e);
                                     }
@@ -130,7 +128,7 @@ public class HistoryActivity extends BaseActivity {
                             }
 
                             // Ordenar os grupos por data (mês e ano mais recente primeiro) usando o map de datas
-                            List<Map.Entry<String, List<TableHistoryAdapter.RowItem>>> sortedGroups = new ArrayList<>(groupedProducts.entrySet());
+                            List<Map.Entry<String, List<AdapterTableHistory.RowItem>>> sortedGroups = new ArrayList<>(groupedProducts.entrySet());
                             sortedGroups.sort((entry1, entry2) -> {
                                 Date date1 = dateMap.get(entry1.getKey());
                                 Date date2 = dateMap.get(entry2.getKey());
@@ -138,22 +136,22 @@ public class HistoryActivity extends BaseActivity {
                             });
 
                             // Converter os grupos ordenados para uma lista para exibição no adapter
-                            List<TableHistoryAdapter.GroupedRowItem> groupedRowItems = new ArrayList<>();
-                            for (Map.Entry<String, List<TableHistoryAdapter.RowItem>> entry : sortedGroups) {
+                            List<AdapterTableHistory.GroupedRowItem> groupedRowItems = new ArrayList<>();
+                            for (Map.Entry<String, List<AdapterTableHistory.RowItem>> entry : sortedGroups) {
                                 String header = entry.getKey(); // Mês e ano
-                                List<TableHistoryAdapter.RowItem> items = entry.getValue();
+                                List<AdapterTableHistory.RowItem> items = entry.getValue();
 
                                 // Adicionar o cabeçalho
-                                groupedRowItems.add(new TableHistoryAdapter.GroupedRowItem(header));
+                                groupedRowItems.add(new AdapterTableHistory.GroupedRowItem(header));
 
                                 // Adicionar os itens do grupo
-                                for (TableHistoryAdapter.RowItem item : items) {
-                                    groupedRowItems.add(new TableHistoryAdapter.GroupedRowItem(item));
+                                for (AdapterTableHistory.RowItem item : items) {
+                                    groupedRowItems.add(new AdapterTableHistory.GroupedRowItem(item));
                                 }
                             }
 
                             // Atualizar o adaptador com os dados agrupados
-                            tableHistoryAdapter.updateGroupedItems(groupedRowItems);
+                            adapterTableHistory.updateGroupedItems(groupedRowItems);
                         } else {
                             Log.d("Firestore", "O usuário não tem produtos comprados.");
                         }

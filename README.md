@@ -10,19 +10,21 @@ app/
 ├── java/                
 │   ├── java\com\example\bancodedados
 │   │   ├── models/
-│   │   │   ├── Product.java
+│   │   │   └── Product.java
 │   │   ├── services/
 │   │   │   ├── FirebaseUserService.java
 │   │   │   ├── SignInGoogleService.java
 │   │   │   ├── SignInService.java
-│   │   │   ├── SignUpService.java
+│   │   │   └── SignUpService.java
 │   │   ├── utils/
-│   │   │   ├── CardAdapter.java
-│   │   │   ├── CardSalonAdapter.java
+[//]: # (adapters)
+│   │   │   ├── AdapterCard.java
+│   │   │   ├── AdapterCardSalon.java
+│   │   │   ├── AdapterTable.java
+│   │   │   ├── AdapterTableHistory.java
+[//]: # (utilities)
 │   │   │   ├── Navigation.java
-│   │   │   ├── PasswordVisibility.java
-│   │   │   ├── TableAdapter.java
-│   │   │   ├── TableHistoryAdapter.java
+│   │   │   └── PasswordVisibility.java
 │   │   ├── BaseActivity.java
 │   │   ├── BusinessActivity.java
 │   │   ├── CredentialManagerHelper.java              

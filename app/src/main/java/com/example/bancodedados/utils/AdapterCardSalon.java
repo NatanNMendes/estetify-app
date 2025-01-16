@@ -21,12 +21,12 @@ import java.util.Map;
 
 import com.example.bancodedados.SalonPage;
 
-public class CardSalonAdapter extends RecyclerView.Adapter<CardSalonAdapter.ViewHolder> {
+public class AdapterCardSalon extends RecyclerView.Adapter<AdapterCardSalon.ViewHolder> {
 
     private final List<Map<String, Object>> salonList;
     private final Context context; // Adicionado contexto
 
-    public CardSalonAdapter(List<Map<String, Object>> salonList, Context context) {
+    public AdapterCardSalon(List<Map<String, Object>> salonList, Context context) {
         this.salonList = salonList;
         this.context = context;
     }
