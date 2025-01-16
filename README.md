@@ -70,17 +70,28 @@ app/
 [//]: # (custom image)
 │   │   └── image_start_screen.xml
 │   ├── layout/
+[//]: # (activitys)
+│   │   ├── activity_base.xml
+│   │   ├── activity_business.xml
+│   │   ├── activity_history.xml
+│   │   ├── activity_login.xml
 │   │   ├── activity_main.xml
-│   │   ├── activity_user.xml
-│   │   └── activity_book.xml     
+│   │   ├── activity_perfil.xml
+│   │   ├── activity_salon_page.xml
+│   │   ├── activity_sign_up.xml
+│   │   ├── activity_start_screen.xml
+[//]: # (items)
+│   │   ├── item_card.xml
+│   │   ├── item_card_salon.xml
+│   │   ├── item_header.xml
+│   │   ├── item_row.xml
+│   │   ├── item_table_row.xml
+│   │   └── item_table_row_buy.xml     
 │   ├── menu/
-│   │   └── activity_book.xml
-│   ├── mipmap/
-│   │   └── activity_book.xml
+│   │   └── bottom_navigation_menu.xml
 │   ├── values/
-│   │   └── activity_book.xml
-│   ├── xml/
-│   │   └── activity_book.xml     
+│   │   ├── colors.xml
+│   │   └── strings.xml   
 ```
 
 ## Descrição dos Diretórios e Arquivos
