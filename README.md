@@ -103,14 +103,14 @@ app/
 
 #### java/:
 - **com.example.bancodedados**
-  - `**models/**:
+  - **models/**:
       - `Product.java`:  Modelo de dados representando produtos.
-  - `**services/**:
+  - **services/**:
       - `FirebaseUserService.java`: Gerencia autenticação e interação com o Firebase.
       - `SignInGoogleService.java`: Implementa login com Google.
       - `SignInService.java`: Lida com o processo de login padrão.
       - `SignUpService.java`: Gerencia o cadastro de novos usuários.
-  - `**utils/**:
+  - **utils/**:
       - `AdapterCard.java`: Adapta dados para exibição em cartões.
       - `AdapterCardSalon.java`: Adapta dados de salões em cartões.
       - `AdapterTable.java`: Adapta dados para tabelas.
@@ -135,9 +135,9 @@ app/
     - `custom_background.xml`:  Modelo de dados representando produtos.
   - **layout/**:
     - `custom_background.xml`:  Modelo de dados representando produtos.
-  - `**menu/**`:
+  - **menu/**:
     - `bottom_navigation_menu.xml`: Menu inferior de navegação
-  - `**values/**:
+  - **values/**:
     - `colors.xml`: Paleta de cores do app.
     - `strings.xml`: Textos e mensagens do app.
     
