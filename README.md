@@ -98,26 +98,17 @@ app/
 
 ## Descrição dos Diretórios e Arquivos
 
-- **src/**: Contém os arquivos de código-fonte da aplicação, organizados por funcionalidades.
-  - `main.c`: Ponto de entrada da aplicação.
-  - `user.c`: Funções relacionadas a usuários, como login e criação de contas.
-  - `book.c`: Funções relacionadas a livros, como cadastro e reserva.
-  - `gui.c`: Funções responsáveis pela interface gráfica.
-  - `utils.c`: Funções auxiliares, como manipulação de arquivos e validações.
+- **app/**: Pasta raiz contendo todos os arquivos essenciais do aplicativo Android.
 
-- **include/**: Contém os arquivos de cabeçalho para as funções e estruturas.
-  - `user.h`: Definições relacionadas a usuários.
-  - `book.h`: Definições relacionadas a livros.
-  - `gui.h`: Definições para a interface gráfica.
-  - `utils.h`: Funções auxiliares, como leitura/escrita de arquivos.
+  - **manifests/**: Contém os arquivos de cabeçalho para as funções e estruturas.
+    - `AndroidManifest.xml`: Arquivo fundamental que define as configurações básicas do app, como permissões, atividades, e serviços.
 
-- **assets/**: Armazena recursos estáticos como imagens e arquivos de estilo.
-  - `logo.png`: O logo da aplicação.
-  - `style.css`: Arquivo CSS para estilizar as janelas GTK.
+  - **java/**: Contém o código-fonte Java dividido por pacotes.
 
-- **data/**: Contém arquivos de dados persistentes, como `users.txt` e `books.txt`, para armazenar informações dos usuários e livros.
+    - **com.example.bancodedados/**: Pacote principal da aplicação.
 
-- **build/**: Diretório criado durante o processo de build, onde os arquivos compilados são armazenados.
+      - **models/**: Diretório criado durante o processo de build, onde os arquivos compilados são armazenados.
+        - `AndroidManifest.xml`: Arquivo fundamental que define as configurações básicas do app, como permissões, atividades, e serviços.
 
 - **Makefile**: Arquivo de automação para compilar e gerar a aplicação a partir do código-fonte.
 
