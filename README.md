@@ -1,6 +1,40 @@
-# Estetify
-Aplicativo multiplataforma para agendamento e gerenciamento de serviços estéticos, com funcionalidades como cadastro de usuários, visualização de serviços, localização de profissionais próximos, e integração com notificações e pagamento. Desenvolvido para oferecer praticidade e acessibilidade no cuidado com a beleza.
-Aqui está um exemplo de um arquivo `README.md` para mostrar a organização de pastas do seu projeto:
+<h1>Estetify</h1>
+<i>By Natan Nunes Mendes (NatanNMendes)</i>
+
+[![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/NatanNMendes)
+[![Perfil DIO](https://img.shields.io/badge/-Meu%20Perfil%20na%20DIO-3333FF?style=for-the-badge&logo=gitbook&logoColor=white)](https://www.dio.me/users/natan_nunes_mendes_95684)
+[![LinkedIn](https://img.shields.io/badge/linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/natan-nunes-mendes-progamador/)
+[![WhatsApp](https://img.shields.io/badge/WhatsApp-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://wa.me/5575988055119)
+
+<h3><strong>Tecnologias Utilizadas</strong></h3>
+
+<a href="https://www.java.com" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/java/java-original.svg" alt="java" width="40" height="40"/>
+
+<a href="https://www.java.com" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/firebase/firebase-original.svg" alt="firebase" width="40" height="40"/>
+
+<a href="https://developer.android.com/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/android/android-original.svg" alt="android" width="40" height="40"/>
+
+<a href="https://developers.google.com/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/google/google-original.svg" alt="google" width="40" height="40"/>
+
+<h3><strong>Descrição Geral</strong></h3>
+
+<p align="justify">
+O <strong>Estetify</strong> é um aplicativo multiplataforma desenvolvido para facilitar o agendamento e o gerenciamento de serviços estéticos. Ele oferece uma experiência completa para usuários que buscam praticidade e acessibilidade nos cuidados com a beleza. Entre as principais funcionalidades, destacam-se o cadastro de usuários, a visualização de serviços disponíveis, a localização de profissionais próximos, e a integração com notificações e sistemas de pagamento. A proposta do Estetify é centralizar e otimizar o processo de contratação de serviços estéticos, promovendo comodidade tanto para clientes quanto para profissionais da área.
+</p>
+<p align="justify">
+A estrutura do projeto foi cuidadosamente organizada para garantir uma manutenção eficiente e facilitar futuras expansões. O diretório principal <code>app/</code> contém todos os arquivos essenciais para o funcionamento do aplicativo. Dentro dele, o diretório <code>manifests/</code> abriga o arquivo <code>AndroidManifest.xml</code> , que é responsável por definir configurações fundamentais, como permissões, atividades e serviços utilizados pelo app. Esse arquivo é essencial para o correto funcionamento e integração do aplicativo com o sistema operacional.
+</p>
+<p align="justify">
+No diretório <code>java/</code>, encontra-se o pacote principal <code>com.example.bancodedados</code> , que organiza o código-fonte em diferentes subdiretórios conforme suas responsabilidades. A pasta <code>models/</code> contém classes de modelos de dados, como  <code>Product.java</code>, que representa a estrutura de produtos cadastrados no sistema. A pasta <code>services/</code> concentra serviços de autenticação e integração, como o <code>FirebaseUserService.java</code>, responsável pela conexão com o Firebase, o <code>SignInGoogleService.java</code>, que permite login com Google, e os serviços de login e cadastro padrão (<code>SignInService.java</code> e <code>SignUpService.java</code>). Já a pasta <code>utils/</code> reúne classes utilitárias, como adaptadores para exibição de dados (<code>AdapterCard.java</code>, <code>AdapterTable.java</code>) e funcionalidades auxiliares de navegação (<code>Navigation.java</code>) e visibilidade de senha (<code>PasswordVisibility.java</code>).
+</p>
+<p align="justify">
+Além disso, diversas atividades essenciais compõem a lógica de navegação do app, como <code>LoginActivity.java</code> para login, <code>SignUpActivity.java</code> para cadastro de novos usuários, <code>MainActivity.java</code> como tela principal, e <code>PerfilActivity.java</code> para gerenciar o perfil do usuário. Também há telas específicas para visualização de salões (<code>BusinessActivity.java</code> e <code>SalonPage.java</code>) e para o histórico de serviços (<code>HistoryActivity.java</code>).
+</p>
+<p align="justify">
+A parte visual do aplicativo é organizada no diretório <code>res/</code>, que contém recursos gráficos e de layout. A pasta <code>drawable/</code> guarda layouts personalizados, como fundos e botões (<code>custom_background.xml</code>, <code>custom_background_button.xml</code>), além de ícones personalizados (<code>ic_calendar.xml</code>, <code>ic_google_logo.xml</code>). A pasta <code>layout/</code> centraliza os arquivos de interface de usuário, incluindo os layouts das telas principais (<code>activity_login.xml</code>, <code>activity_main.xml</code>, <code>activity_perfil.xml</code>) e componentes reutilizáveis, como <code>item_card.xml</code> para exibição de serviços e <code>item_table_row.xml</code> para organização de dados em tabelas. A pasta <code>menu/</code> contém a configuração do menu de navegação inferior (<code>bottom_navigation_menu.xml</code>), enquanto a pasta <code>values/</code> armazena definições de cores (<code>colors.xml</code>) e textos (<code>strings.xml</code>), permitindo fácil personalização e internacionalização.
+</p>
+
+<h3><strong>Estrutura de Diretórios</strong></h3>
 
 ```
 app/
@@ -95,119 +129,3 @@ app/
 │   │   ├── colors.xml
 │   │   └── strings.xml   
 ```
-
-### Descrição dos Diretórios e Arquivos
-
-#### manifests/:
-  - `AndroidManifest.xml`: Arquivo fundamental que define as configurações básicas do app, como permissões, atividades, e serviços.
-
-#### java/:
-- **com.example.bancodedados**
-  - **models/**:
-      - `Product.java`:  Modelo de dados representando produtos.
-  - **services/**:
-      - `FirebaseUserService.java`: Gerencia autenticação e interação com o Firebase.
-      - `SignInGoogleService.java`: Implementa login com Google.
-      - `SignInService.java`: Lida com o processo de login padrão.
-      - `SignUpService.java`: Gerencia o cadastro de novos usuários.
-  - **utils/**:
-      - `AdapterCard.java`: Adapta dados para exibição em cartões.
-      - `AdapterCardSalon.java`: Adapta dados de salões em cartões.
-      - `AdapterTable.java`: Adapta dados para tabelas.
-      - `AdapterTableHistory.java`: Adapta o histórico de ações em tabelas.
-      - `Navigation.java`: Auxilia na navegação entre telas.
-      - `PasswordVisibility.java`: Alterna a visibilidade da senha.
-  - `BaseActivity.java`: Classe base da bottom navigation com funcionalidades comuns às demais atividades.
-  - `BusinessActivity.java`: Tela para exibir e pesquisar salões.
-  - `HistoryActivity.java`: Tela para exibir o histórico de compras do usuário separado por mês.
-  - `LoginActivity.java`: Tela de login.
-  - `MainActivity.java`: Tela principal do aplicativo.
-  - `PerfilActivity.java`: Tela de perfil do usuário.
-  - `SalonPage.java`: Tela de detalhes de salões.
-  - `SignInActivity.java`: Tela de login.
-  - `SignUpActivity.java`:Tela de cadastro de novos usuários.
-  - `StartScreen.java`: Tela inicial de boas-vindas.
-  - `CredentialManagerHelper.java`: Gerencia credenciais do usuário.
-  - `UserPreferences.java`: Gerencia preferências e configurações do usuário.
-
-#### res/:
-  - **drawable/**:
-    - **custom layouts**
-    - `custom_background.xml`: Plano de fundo personalizado.
-    - `custom_background_button.xml`: Estilo de botão personalizado.
-    - `custom_background_button_black.xml`:  Modelo de dados representando produtos.
-    - `custom_background_card.xml`:  Modelo de dados representando produtos.
-    - `custom_background_card_image.xml`:  Modelo de dados representando produtos.
-    - `custom_background_category.xml`:  Modelo de dados representando produtos.
-    - `custom_background_search_bar.xml`:  Modelo de dados representando produtos.
-    - `custom_background_table_row.xml`:  Modelo de dados representando produtos.
-    - `custom_container_user.xml`:  Modelo de dados representando produtos.
-    - `custom_rounded_button.xml`:  Modelo de dados representando produtos.
-    - **custom icon**
-    - `ic_arrow_left.xml`: Ícone de seta para voltar.
-    - `ic_book.xml`:  Modelo de dados representando produtos.
-    - `ic_buy.xml`:  Modelo de dados representando produtos.
-    - `ic_calendar.xml`:  Modelo de dados representando produtos.
-    - `ic_arrow_left.xml`:  Modelo de dados representando produtos.
-    - `ic_book.xml`:  Modelo de dados representando produtos.
-    - `ic_buy.xml`:  Modelo de dados representando produtos.
-    - `ic_check.xml`:  Modelo de dados representando produtos.
-    - `ic_clipboard.xml`:  Modelo de dados representando produtos.
-    - `ic_email.xml`:  Modelo de dados representando produtos.
-    - `ic_google_logo.xml`: Ícone do Google.
-    - `ic_house.xml`:  Modelo de dados representando produtos.
-    - `ic_launcher_background.xml`:  Modelo de dados representando produtos.
-    - `ic_launcher_foreground.xml`:  Modelo de dados representando produtos.
-    - `ic_location.xml`:  Modelo de dados representando produtos.
-    - `ic_logo.xml`:  Modelo de dados representando produtos.
-    - `ic_person.xml`:  Modelo de dados representando produtos.
-    - `ic_user.xml`:  Modelo de dados representando produtos.
-    - `ic_visibility_off.xml`:  Modelo de dados representando produtos.
-    - `ic_visibility_on.xml`:  Modelo de dados representando produtos.
-    - **custom image**
-    - `image_start_screen.xml`: Imagem da tela inicial.
-  - **layout/**:
-    - **activitys**
-    - `activity_base.xml`: Layout da tela de login.
-    - `activity_business.xml`: Layout da tela principal.
-    - `activity_history.xml`:  Modelo de dados representando produtos.
-    - `activity_login.xml`:  Modelo de dados representando produtos.
-    - `activity_main.xml`:  Modelo de dados representando produtos.
-    - `activity_perfil.xml`:  Modelo de dados representando produtos.
-    - `activity_salon_page.xml`:  Modelo de dados representando produtos.
-    - `activity_sign_up.xml`:  Modelo de dados representando produtos.
-    - `activity_start_screen.xml`:  Modelo de dados representando produtos.
-    - **items**
-    - `item_card.xml`: Layout dos cards exibidos na MainActivity.
-    - `item_card_salon.xml`:  Modelo de dados representando produtos.
-    - `item_header.xml`:  Modelo de dados representando produtos.
-    - `item_row.xml`:  Modelo de dados representando produtos.
-    - `item_table_row.xml`: Layout de linha de tabela
-    - `item_table_row_buy.xml`:  Modelo de dados representando produtos.
-  - **menu/**:
-    - `bottom_navigation_menu.xml`: Menu inferior de navegação
-  - **values/**:
-    - `colors.xml`: Paleta de cores do app.
-    - `strings.xml`: Textos e mensagens do app.
-    
-## Compilação e Execução
-
-1. Para compilar o projeto, use o comando:
-   ```bash
-   make
-   ```
-
-2. Para executar a aplicação após a compilação:
-   ```bash
-   ./app
-   ```
-
-Este projeto usa o GTK para a interface gráfica e foi desenvolvido para o sistema operacional Linux. A compilação pode precisar de ajustes em sistemas Windows ou macOS.
-
-## Contribuições
-
-Contribuições são bem-vindas! Se você tiver sugestões ou melhorias, sinta-se à vontade para abrir uma **issue** ou **pull request**.
-
-```
-
-Esse exemplo de `README.md` organiza os arquivos do projeto em uma estrutura lógica e descreve brevemente cada diretório e arquivo, facilitando o entendimento do projeto e como ele está estruturado.
