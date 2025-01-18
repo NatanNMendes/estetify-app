@@ -26,7 +26,7 @@
   </a>
 </div>
 
-<h3><strong>Descrição Geral</strong></h3>
+<h3><strong>Visão Geral</strong></h3>
 
 <p align="justify">
 O <strong>Estetify</strong> é um aplicativo multiplataforma desenvolvido para facilitar o agendamento e o gerenciamento de serviços estéticos. Ele oferece uma experiência completa para usuários que buscam praticidade e acessibilidade nos cuidados com a beleza. Entre as principais funcionalidades, destacam-se o cadastro de usuários, a visualização de serviços disponíveis, a localização de profissionais próximos, e a integração com notificações e sistemas de pagamento. A proposta do Estetify é centralizar e otimizar o processo de contratação de serviços estéticos, promovendo comodidade tanto para clientes quanto para profissionais da área.
