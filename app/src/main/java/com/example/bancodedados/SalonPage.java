@@ -179,28 +179,81 @@ public class SalonPage extends BaseActivity {
         }
     }
 
-    // Exibir serviços por padrão e configurar botão
-    private void initializeTabs() {
-        // Exibir tabela de serviços ao abrir a página
-        switchTab(true);
-
-        // Configurar botões para alternar entre serviços e produtos
-        tabServices.setOnClickListener(v -> switchTab(true));
-        tabProducts.setOnClickListener(v -> switchTab(false));
-
-    }
+//    private void addProductToUserCart(String nome, String valor) {
+//        // Verificar se o status do salão é "FECHADO"
+//        TextView status = findViewById(R.id.status);
+//        if ("FECHADO".equalsIgnoreCase(status.getText().toString())) {
+//            // Exibir alerta
+//            new androidx.appcompat.app.AlertDialog.Builder(this)
+//                    .setTitle("Salão Fechado")
+//                    .setMessage("O salão está fechado no momento. As compras só podem ser realizadas durante o horário de funcionamento.")
+//                    .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
+//                    .show();
+//            return; // Impedir a execução da compra
+//        }
+//
+//        // Continuar com o processo de adicionar ao carrinho se o salão estiver aberto
+//        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+//
+//        if (currentUser != null) {
+//            String userId = currentUser.getUid();
+//            FirebaseFirestore db = FirebaseFirestore.getInstance();
+//
+//            // Garantir que o valor seja tratado corretamente
+//            double valorDouble = 0.0;
+//            try {
+//                // Substituir vírgula por ponto, caso o valor esteja formatado como "10,00"
+//                String valorFormatado = valor.replace(",", ".");
+//                valorDouble = Double.parseDouble(valorFormatado);
+//            } catch (NumberFormatException e) {
+//                e.printStackTrace();
+//                Toast.makeText(this, "Erro no formato do valor: " + valor, Toast.LENGTH_SHORT).show();
+//                return; // Parar a execução caso o valor seja inválido
+//            }
+//
+//            // Obter a data atual
+//            String dataCompra = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+//                    .format(Calendar.getInstance().getTime());
+//
+//            // Criar o item com nome, valor e data da compra
+//            Map<String, Object> novoItem = new HashMap<>();
+//            novoItem.put("nome", nome);
+//            novoItem.put("valor", valorDouble); // Salvar como número (double)
+//            novoItem.put("dataCompra", dataCompra); // Adicionar a data de compra
+//
+//            // Atualizar o array no Firestore (adiciona no topo)
+//            db.collection("Users").document(userId).get()
+//                    .addOnSuccessListener(documentSnapshot -> {
+//                        List<Map<String, Object>> produtosExistentes =
+//                                (List<Map<String, Object>>) documentSnapshot.get("produtosComprados");
+//                        if (produtosExistentes == null) {
+//                            produtosExistentes = new ArrayList<>();
+//                        }
+//
+//                        // Adicionar o novo item no topo da lista
+//                        produtosExistentes.add(0, novoItem);
+//
+//                        db.collection("Users").document(userId)
+//                                .update("produtosComprados", produtosExistentes)
+//                                .addOnSuccessListener(aVoid -> Toast.makeText(this, nome + " adicionado ao carrinho!", Toast.LENGTH_SHORT).show())
+//                                .addOnFailureListener(e -> Toast.makeText(this, "Erro ao adicionar: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+//                    })
+//                    .addOnFailureListener(e -> Toast.makeText(this, "Erro ao acessar o usuário: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+//        } else {
+//            Toast.makeText(this, "Usuário não está logado.", Toast.LENGTH_SHORT).show();
+//        }
+//    }
 
     private void addProductToUserCart(String nome, String valor) {
         // Verificar se o status do salão é "FECHADO"
         TextView status = findViewById(R.id.status);
         if ("FECHADO".equalsIgnoreCase(status.getText().toString())) {
-            // Exibir alerta
             new androidx.appcompat.app.AlertDialog.Builder(this)
                     .setTitle("Salão Fechado")
                     .setMessage("O salão está fechado no momento. As compras só podem ser realizadas durante o horário de funcionamento.")
                     .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
                     .show();
-            return; // Impedir a execução da compra
+            return;
         }
 
         // Continuar com o processo de adicionar ao carrinho se o salão estiver aberto
@@ -210,29 +263,24 @@ public class SalonPage extends BaseActivity {
             String userId = currentUser.getUid();
             FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-            // Garantir que o valor seja tratado corretamente
-            double valorDouble = 0.0;
+            double valorDouble;
             try {
-                // Substituir vírgula por ponto, caso o valor esteja formatado como "10,00"
                 String valorFormatado = valor.replace(",", ".");
                 valorDouble = Double.parseDouble(valorFormatado);
             } catch (NumberFormatException e) {
                 e.printStackTrace();
                 Toast.makeText(this, "Erro no formato do valor: " + valor, Toast.LENGTH_SHORT).show();
-                return; // Parar a execução caso o valor seja inválido
+                return;
             }
 
-            // Obter a data atual
             String dataCompra = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
                     .format(Calendar.getInstance().getTime());
 
-            // Criar o item com nome, valor e data da compra
             Map<String, Object> novoItem = new HashMap<>();
             novoItem.put("nome", nome);
-            novoItem.put("valor", valorDouble); // Salvar como número (double)
-            novoItem.put("dataCompra", dataCompra); // Adicionar a data de compra
+            novoItem.put("valor", valorDouble);
+            novoItem.put("dataCompra", dataCompra);
 
-            // Atualizar o array no Firestore (adiciona no topo)
             db.collection("Users").document(userId).get()
                     .addOnSuccessListener(documentSnapshot -> {
                         List<Map<String, Object>> produtosExistentes =
@@ -241,12 +289,14 @@ public class SalonPage extends BaseActivity {
                             produtosExistentes = new ArrayList<>();
                         }
 
-                        // Adicionar o novo item no topo da lista
                         produtosExistentes.add(0, novoItem);
 
                         db.collection("Users").document(userId)
                                 .update("produtosComprados", produtosExistentes)
-                                .addOnSuccessListener(aVoid -> Toast.makeText(this, nome + " adicionado ao carrinho!", Toast.LENGTH_SHORT).show())
+                                .addOnSuccessListener(aVoid -> {
+                                    showConfirmationDialog(nome, valorDouble, "Nome do Salão", dataCompra);
+                                    Toast.makeText(this, nome + " adicionado ao carrinho!", Toast.LENGTH_SHORT).show();
+                                })
                                 .addOnFailureListener(e -> Toast.makeText(this, "Erro ao adicionar: " + e.getMessage(), Toast.LENGTH_SHORT).show());
                     })
                     .addOnFailureListener(e -> Toast.makeText(this, "Erro ao acessar o usuário: " + e.getMessage(), Toast.LENGTH_SHORT).show());
@@ -254,6 +304,20 @@ public class SalonPage extends BaseActivity {
             Toast.makeText(this, "Usuário não está logado.", Toast.LENGTH_SHORT).show();
         }
     }
+
+    private void showConfirmationDialog(String nome, double valor, String nomeSalao, String dataCompra) {
+        String message = String.format(
+                "Produto: %s\nPreço: R$ %.2f\nSalão: %s\nData: %s",
+                nome, valor, nomeSalao, dataCompra
+        );
+
+        new androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle("Compra realizada com sucesso!")
+                .setMessage(message)
+                .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
+                .show();
+    }
+
 
     private void verificarHorarioAtual(Map<String, Map<String, String>> horarioFuncionamento, TextView status) {
         // Obter o dia da semana atual
