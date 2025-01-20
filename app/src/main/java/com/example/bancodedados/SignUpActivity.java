@@ -1,5 +1,6 @@
 package com.example.bancodedados;
 
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
@@ -33,7 +34,6 @@ public class SignUpActivity extends AppCompatActivity {
 
         setupUI();
         setupWindow();
-        setupListeners();
     }
 
     private void setupUI() {
@@ -44,6 +44,8 @@ public class SignUpActivity extends AppCompatActivity {
         togglePasswordButton = findViewById(R.id.togglePasswordButton);
         toggleConfirmPasswordButton = findViewById(R.id.toggleConfirmPasswordButton);
         createAccountButton = findViewById(R.id.createAccountButton);
+
+        setupListeners();
     }
 
     private void setupWindow() {
@@ -59,16 +61,75 @@ public class SignUpActivity extends AppCompatActivity {
         });
     }
 
+    private boolean validateInputs() {
+        boolean isValid = true;
+
+        String username = usernameInput.getText().toString().trim();
+        String email = emailInput.getText().toString().trim();
+        String password = passwordInput.getText().toString().trim();
+        String confirmPassword = confirmPasswordInput.getText().toString().trim();
+
+        if (username.isEmpty()) {
+            usernameInput.setError("Nome de usuário é obrigatório");
+            usernameInput.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.red)));
+            isValid = false;
+        } else {
+            usernameInput.setError(null);
+            usernameInput.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.white)));
+        }
+
+        if (email.isEmpty()) {
+            emailInput.setError("Email é obrigatório");
+            emailInput.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.red)));
+            isValid = false;
+        } else {
+            emailInput.setError(null);
+            emailInput.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.white)));
+        }
+
+        if (password.isEmpty()) {
+            passwordInput.setError("Senha é obrigatória");
+            passwordInput.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.red)));
+            isValid = false;
+        } else if (password.length() < 6) {
+            passwordInput.setError("A senha deve ter pelo menos 6 caracteres");
+            passwordInput.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.red)));
+            isValid = false;
+        } else {
+            passwordInput.setError(null);
+            passwordInput.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.white)));
+        }
+
+        if (confirmPassword.isEmpty()) {
+            confirmPasswordInput.setError("Confirmação de senha é obrigatória");
+            confirmPasswordInput.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.red)));
+            isValid = false;
+        } else if (!confirmPassword.equals(password)) {
+            confirmPasswordInput.setError("As senhas não coincidem");
+            confirmPasswordInput.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.red)));
+            isValid = false;
+        } else {
+            confirmPasswordInput.setError(null);
+            confirmPasswordInput.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.white)));
+        }
+
+        return isValid;
+    }
+
+
+
     private void setupListeners() {
         togglePasswordButton.setOnClickListener(view -> passwordVisibility.togglePasswordVisibility(passwordInput, togglePasswordButton));
         toggleConfirmPasswordButton.setOnClickListener(view -> passwordVisibility.togglePasswordVisibility(confirmPasswordInput, toggleConfirmPasswordButton));
         createAccountButton.setOnClickListener(view -> {
-            String username = usernameInput.getText().toString().trim();
-            String email = emailInput.getText().toString().trim();
-            String password = passwordInput.getText().toString().trim();
-            String confirmPassword = confirmPasswordInput.getText().toString().trim();
+            if (validateInputs()) {
+                String username = usernameInput.getText().toString().trim();
+                String email = emailInput.getText().toString().trim();
+                String password = passwordInput.getText().toString().trim();
+                String confirmPassword = confirmPasswordInput.getText().toString().trim();
 
-            signUpService.createAccount(email, password, confirmPassword, username, this);
+                signUpService.createAccount(email, password, confirmPassword, username, this);
+            }
         });
     }
 }

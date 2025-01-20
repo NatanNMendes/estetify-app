@@ -7,7 +7,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.example.bancodedados.MainActivity;
-import com.example.bancodedados.PerfilActivity;
 import com.example.bancodedados.utils.Navigation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
