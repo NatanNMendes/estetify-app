@@ -1,5 +1,9 @@
 package com.example.bancodedados;
 
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -10,6 +14,7 @@ import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -27,11 +32,14 @@ import java.util.Date;
 import java.util.Locale;
 
 public class PerfilActivity extends BaseActivity {
-    private TextView perfil_nome, perfil_email, perfil_data_criacao;
+    private TextView perfil_nome, perfil_email, perfil_data_criacao, perfil_localizacao;
     private ImageView perfil_foto;
     private Button btn_sair;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     String usuarioID;
+    private LocationManager locationManager;
+    private LocationListener locationListener;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +73,26 @@ public class PerfilActivity extends BaseActivity {
                 finish();
             }
         });
+
+
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                // Atualizar a localização na interface
+                String localizacao = "Lat: " + location.getLatitude() + ", Long: " + location.getLongitude();
+                perfil_localizacao.setText("Localização: " + localizacao);
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {}
+
+            @Override
+            public void onProviderEnabled(String provider) {}
+
+            @Override
+            public void onProviderDisabled(String provider) {}
+        };
     }
 
     @Override
@@ -119,6 +147,34 @@ public class PerfilActivity extends BaseActivity {
         } else {
             Log.d("Auth", "Usuário não autenticado.");
         }
+
+        // Verificar permissões de localização e obter a localização
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            // Log para indicar que as permissões não foram concedidas
+            Log.d("LocationPermission", "Permissões de localização não concedidas.");
+
+            // Solicita as permissões
+            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        } else {
+            // Log para indicar que as permissões foram concedidas
+            Log.d("LocationPermission", "Permissões de localização concedidas.");
+
+            // Solicita atualizações de localização
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+
+            // Log para indicar que a solicitação de atualizações de localização foi feita
+            Log.d("LocationManager", "Solicitação de atualizações de localização feita com sucesso.");
+        }
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        // Parar a atualização da localização quando a atividade parar
+        locationManager.removeUpdates(locationListener);
     }
 
     // Converte o timestamp para uma data legível
@@ -134,5 +190,6 @@ public class PerfilActivity extends BaseActivity {
         perfil_email = findViewById(R.id.perfil_email);
         perfil_foto = findViewById(R.id.perfil_foto);
         perfil_data_criacao = findViewById(R.id.perfil_data_criacao); // Novo campo adicionado
+        perfil_localizacao = findViewById(R.id.perfil_localizacao);
     }
 }

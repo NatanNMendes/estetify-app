@@ -72,6 +72,8 @@ dependencies {
     // Biblioteca de manipulação de texto
     implementation 'org.apache.commons:commons-text:1.9'
 
+    implementation 'com.google.android.gms:play-services-location:18.0.0'
+
     // Dependências para testes
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit

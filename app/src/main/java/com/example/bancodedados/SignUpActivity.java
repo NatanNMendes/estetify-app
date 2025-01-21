@@ -1,6 +1,7 @@
 package com.example.bancodedados;
 
 import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
@@ -71,46 +72,48 @@ public class SignUpActivity extends AppCompatActivity {
 
         if (username.isEmpty()) {
             usernameInput.setError("Nome de usuário é obrigatório");
-            usernameInput.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.red)));
+            usernameInput.setHintTextColor(ColorStateList.valueOf(getResources().getColor(R.color.red)));
             isValid = false;
         } else {
             usernameInput.setError(null);
-            usernameInput.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.white)));
+            usernameInput.setHintTextColor(ColorStateList.valueOf(getResources().getColor(R.color.white)));
+
         }
 
         if (email.isEmpty()) {
             emailInput.setError("Email é obrigatório");
-            emailInput.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.red)));
+            emailInput.setHintTextColor(ColorStateList.valueOf(getResources().getColor(R.color.red)));
             isValid = false;
         } else {
             emailInput.setError(null);
-            emailInput.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.white)));
+            emailInput.setHintTextColor(ColorStateList.valueOf(getResources().getColor(R.color.white)));
         }
 
         if (password.isEmpty()) {
             passwordInput.setError("Senha é obrigatória");
-            passwordInput.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.red)));
+            passwordInput.setHintTextColor(ColorStateList.valueOf(getResources().getColor(R.color.red)));
+
             isValid = false;
         } else if (password.length() < 6) {
             passwordInput.setError("A senha deve ter pelo menos 6 caracteres");
-            passwordInput.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.red)));
+            passwordInput.setHintTextColor(ColorStateList.valueOf(getResources().getColor(R.color.red)));
             isValid = false;
         } else {
             passwordInput.setError(null);
-            passwordInput.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.white)));
+            passwordInput.setHintTextColor(ColorStateList.valueOf(getResources().getColor(R.color.white)));
         }
 
         if (confirmPassword.isEmpty()) {
             confirmPasswordInput.setError("Confirmação de senha é obrigatória");
-            confirmPasswordInput.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.red)));
+            confirmPasswordInput.setHintTextColor(ColorStateList.valueOf(getResources().getColor(R.color.red)));
             isValid = false;
         } else if (!confirmPassword.equals(password)) {
             confirmPasswordInput.setError("As senhas não coincidem");
-            confirmPasswordInput.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.red)));
+            confirmPasswordInput.setHintTextColor(ColorStateList.valueOf(getResources().getColor(R.color.red)));
             isValid = false;
         } else {
             confirmPasswordInput.setError(null);
-            confirmPasswordInput.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.white)));
+            confirmPasswordInput.setHintTextColor(ColorStateList.valueOf(getResources().getColor(R.color.white)));
         }
 
         return isValid;

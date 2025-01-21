@@ -60,18 +60,18 @@ public class LoginActivity extends AppCompatActivity {
 
             if (email.isEmpty()) {
                 edit_email.setError("Email é obrigatório");
-                edit_email.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.red)));
+                edit_email.setHintTextColor(ColorStateList.valueOf(getResources().getColor(R.color.red)));
             } else {
                 edit_email.setError(null);
-                edit_email.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.white)));
+                edit_email.setHintTextColor(ColorStateList.valueOf(getResources().getColor(R.color.white)));
             }
 
             if (senha.isEmpty()) {
                 edit_senha.setError("Senha é obrigatória");
-                edit_senha.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.red)));
+                edit_senha.setHintTextColor(ColorStateList.valueOf(getResources().getColor(R.color.red)));
             } else {
                 edit_senha.setError(null);
-                edit_senha.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.white)));
+                edit_senha.setHintTextColor(ColorStateList.valueOf(getResources().getColor(R.color.white)));
             }
 
             if (!email.isEmpty() && !senha.isEmpty()) {
