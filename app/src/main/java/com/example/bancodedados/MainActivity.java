@@ -42,9 +42,11 @@ import java.util.Map;
 
 public class MainActivity extends BaseActivity {
 
+    private AdapterTable adapterTable;
+
     private LocationManager locationManager;
     private LocationListener locationListener;
-    private AdapterTable adapterTable;
+    private Location userLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,21 +55,17 @@ public class MainActivity extends BaseActivity {
         setupBottomNavigation();
         updateBottomNavigationSelection(R.id.nav_home);
 
-        // Hide the action bar
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
         }
 
         RecyclerView carouselRecyclerView = findViewById(R.id.carousel_recycler_view);
         carouselRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        setupCategoryButtons(carouselRecyclerView);
 
-        // Dados para a Tabela
         RecyclerView tableRecyclerView = findViewById(R.id.table_recycler_view);
         tableRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        // Inicializar o adaptador vazio e atualizá-lo posteriormente
-        adapterTable = new AdapterTable(new ArrayList<>());
+        adapterTable = new com.example.bancodedados.AdapterTable(new ArrayList<>());
         tableRecyclerView.setAdapter(adapterTable);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -76,36 +74,34 @@ public class MainActivity extends BaseActivity {
             return insets;
         });
 
-        // Inicializar LocationManager
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                // Processar a localização recebida
+                userLocation = location;
+                Log.d("Location", "Localização atualizada: " + location);
+                RecyclerView recyclerView = findViewById(R.id.carousel_recycler_view);
+                List<String> selectedCategories = new ArrayList<>();
+                loadSalonDetails(recyclerView, selectedCategories, getApplicationContext(), userLocation);
             }
 
             @Override
-            public void onStatusChanged(String provider, int status, Bundle extras) {
-                // Tratar mudanças de status
-            }
+            public void onStatusChanged(String provider, int status, Bundle extras) {}
 
             @Override
-            public void onProviderEnabled(String provider) {
-                // Ação quando o provedor for habilitado
-            }
+            public void onProviderEnabled(String provider) {}
 
             @Override
-            public void onProviderDisabled(String provider) {
-                // Ação quando o provedor for desabilitado
-            }
+            public void onProviderDisabled(String provider) {}
         };
 
-        // Solicitar atualizações de localização
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, locationListener);
         } else {
             ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         }
+
+        setupCategoryButtons(carouselRecyclerView);
     }
 
     @Override
@@ -117,8 +113,10 @@ public class MainActivity extends BaseActivity {
         if (user != null) {
             // Obtém o ID do usuário logado
             String usuarioID = user.getUid();
-            // Exibe o ID do usuário no log
+
+            // Exemplo: Exibe o ID do usuário no log
             Log.d("Auth", "Usuário autenticado. ID: " + usuarioID);
+
             // Carregar produtos do Firestore
             loadPurchasedProducts(usuarioID);
         } else {
@@ -134,33 +132,50 @@ public class MainActivity extends BaseActivity {
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful() && task.getResult() != null) {
+                        // Verificar se o campo "produtosComprados" existe
                         List<Map<String, Object>> produtosComprados =
                                 (List<Map<String, Object>>) task.getResult().get("produtosComprados");
 
                         if (produtosComprados != null) {
-                            List<AdapterTable.RowItem> products = new ArrayList<>();
+                            List<com.example.bancodedados.AdapterTable.RowItem> products = new ArrayList<>();
 
-                            int count = 0;
+                            // Iterar sobre os 5 primeiros produtos comprados e adicionar ao adapter
+                            int count = 0; // Contador para limitar os itens
                             for (Map<String, Object> produto : produtosComprados) {
-                                if (count >= 5) break;
+                                if (count >= 5) break; // Interrompe após os 5 primeiros itens
 
                                 String nome = (String) produto.get("nome");
-                                String preco = "0";
-                                Object precoObj = produto.get("valor");
 
-                                if (precoObj instanceof Number) {
-                                    preco = String.valueOf(precoObj);
-                                } else if (precoObj instanceof String) {
-                                    preco = (String) precoObj;
+                                // Verificar o tipo do campo "valor" e garantir que é tratado corretamente
+                                Object precoObj = produto.get("valor");
+                                String preco = "0"; // Valor padrão
+
+                                if (precoObj != null) {
+                                    Log.d("PrecoObj", "Tipo de 'precoObj': " + precoObj.getClass().getSimpleName());
+
+                                    // Verificar se o precoObj é um número
+                                    if (precoObj instanceof Number) {
+                                        preco = String.valueOf(precoObj); // Converte Number para String
+                                        Log.d("Preco", "Preco (Number): " + preco);
+                                    } else if (precoObj instanceof String) {
+                                        preco = (String) precoObj; // Se for String, utiliza diretamente
+                                        Log.d("Preco", "Preco (String): " + preco);
+                                    } else {
+                                        Log.d("Preco", "Tipo de preco desconhecido, utilizando valor padrão.");
+                                    }
+                                } else {
+                                    Log.d("Preco", "Preco é null, utilizando valor padrão.");
                                 }
 
                                 if (nome != null && !nome.isEmpty()) {
-                                    products.add(new AdapterTable.RowItem(nome, preco));
+                                    // Adicionar à lista de produtos
+                                    products.add(new com.example.bancodedados.AdapterTable.RowItem(nome, preco));
                                 }
 
-                                count++;
+                                count++; // Incrementa o contador
                             }
 
+                            // Atualizar o adaptador com os dados carregados
                             adapterTable.updateItems(products);
                         } else {
                             Log.d("Firestore", "O usuário não tem produtos comprados.");
@@ -171,7 +186,7 @@ public class MainActivity extends BaseActivity {
                 });
     }
 
-    public LatLng getLatLngFromCep(Context context, String cep) {
+    private LatLng getLatLngFromCep(Context context, String cep) {
         Geocoder geocoder = new Geocoder(context, Locale.getDefault());
         try {
             List<Address> addresses = geocoder.getFromLocationName(cep, 1);
@@ -185,7 +200,7 @@ public class MainActivity extends BaseActivity {
         return null;
     }
 
-    public double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
+    private double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
         final int R = 6371;
         double latDistance = Math.toRadians(lat2 - lat1);
         double lonDistance = Math.toRadians(lon2 - lon1);
@@ -197,9 +212,12 @@ public class MainActivity extends BaseActivity {
     }
 
     private void loadSalonDetails(RecyclerView recyclerView, List<String> selectedCategories, Context context, Location userLocation) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        if (userLocation == null) {
+            Log.e("Location", "Localização do usuário não está disponível.");
+            return;
+        }
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         db.collection("Salon")
                 .get()
@@ -212,15 +230,12 @@ public class MainActivity extends BaseActivity {
                             String cep = document.getString("cep");
                             List<String> categories = (List<String>) document.get("categoria");
 
-                            if (name == null || name.isEmpty() || url == null || url.isEmpty() || cep == null || cep.isEmpty()) {
-                                continue;
-                            }
+                            if (name == null || url == null || cep == null) continue;
 
                             if (selectedCategories.isEmpty() || (categories != null && !Collections.disjoint(categories, selectedCategories))) {
                                 LatLng salonLatLng = getLatLngFromCep(context, cep);
                                 if (salonLatLng != null) {
-                                    double distance = calculateDistance(userLocation.getLatitude(), userLocation.getLongitude(),
-                                            salonLatLng.latitude, salonLatLng.longitude);
+                                    double distance = calculateDistance(userLocation.getLatitude(), userLocation.getLongitude(), salonLatLng.latitude, salonLatLng.longitude);
 
                                     Map<String, Object> salon = new HashMap<>();
                                     salon.put("name", name);
@@ -231,7 +246,6 @@ public class MainActivity extends BaseActivity {
                             }
                         }
 
-                        // Ordenar por distância
                         Collections.sort(salons, (s1, s2) -> Double.compare((double) s1.get("distance"), (double) s2.get("distance")));
 
                         if (!salons.isEmpty()) {
@@ -248,29 +262,34 @@ public class MainActivity extends BaseActivity {
 
     private void setupCategoryButtons(RecyclerView recyclerView) {
         List<String> selectedCategories = new ArrayList<>();
-        Button buttonCategory1 = findViewById(R.id.button_category1);
-        Button buttonCategory3 = findViewById(R.id.button_category3);
-        Button buttonCategory5 = findViewById(R.id.button_category5);
-        Button buttonCategory6 = findViewById(R.id.button_category6);
+        Drawable iconX = ContextCompat.getDrawable(this, R.drawable.ic_check);
+        if (iconX != null) {
+            iconX.setBounds(0, 0, iconX.getIntrinsicWidth(), iconX.getIntrinsicHeight());
+        }
 
-        buttonCategory1.setOnClickListener(v -> toggleCategorySelection(v, selectedCategories, "Categoria 1"));
-        buttonCategory3.setOnClickListener(v -> toggleCategorySelection(v, selectedCategories, "Categoria 3"));
-        buttonCategory5.setOnClickListener(v -> toggleCategorySelection(v, selectedCategories, "Categoria 5"));
-        buttonCategory6.setOnClickListener(v -> toggleCategorySelection(v, selectedCategories, "Categoria 6"));
+        List<Button> categoryButtons = Arrays.asList(
+                findViewById(R.id.button_category1),
+                findViewById(R.id.button_category3),
+                findViewById(R.id.button_category5),
+                findViewById(R.id.button_category6),
+                findViewById(R.id.button_category7),
+                findViewById(R.id.button_category8)
+        );
 
-        // Carregar salões ao final
-        Location userLocation = new Location(LocationManager.GPS_PROVIDER); // Suponha que você tenha a localização do usuário
-        loadSalonDetails(recyclerView, selectedCategories, getApplicationContext(), userLocation);
-    }
-
-    private void toggleCategorySelection(View v, List<String> selectedCategories, String category) {
-        Button button = (Button) v;
-        if (selectedCategories.contains(category)) {
-            selectedCategories.remove(category);
-            button.setBackgroundColor(Color.TRANSPARENT);  // Deselecionar
-        } else {
-            selectedCategories.add(category);
-            button.setBackgroundColor(Color.YELLOW);  // Selecionar
+        for (Button button : categoryButtons) {
+            button.setOnClickListener(v -> {
+                String category = button.getText().toString();
+                if (selectedCategories.contains(category)) {
+                    selectedCategories.remove(category);
+                    button.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#BCBCBC")));
+                    button.setCompoundDrawables(null, null, null, null);
+                } else {
+                    selectedCategories.add(category);
+                    button.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#6200EE")));
+                    button.setCompoundDrawables(null, null, iconX, null);
+                }
+                loadSalonDetails(recyclerView, selectedCategories, getApplicationContext(), userLocation);
+            });
         }
     }
 }
