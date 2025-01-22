@@ -82,7 +82,7 @@ public class SignInGoogleService {
                     if (task.isSuccessful()) {
                         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                         if (user != null) {
-                            // Salva os dados do usuário no Firestore
+                            // Verifique e atualize/crie os dados do usuário no Firestore
                             firebaseUserService.saveUserData(user, activity);
                         }
 
@@ -95,4 +95,5 @@ public class SignInGoogleService {
                     }
                 });
     }
+
 }

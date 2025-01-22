@@ -9,6 +9,7 @@ import com.example.bancodedados.PerfilActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,7 +33,46 @@ public class FirebaseUserService {
         String usuarioID = user.getUid();
         Map<String, Object> usuario = createUserDataMap(user);
 
-        saveToFirestore(usuarioID, usuario, context);
+        DocumentReference documentReference = firestore.collection("Users").document(usuarioID);
+        documentReference.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful() && task.getResult() != null) {
+                DocumentSnapshot documentSnapshot = task.getResult();
+                if (documentSnapshot.exists()) {
+                    // O documento já existe. Preserve o campo 'produtosComprados'.
+                    List<Map<String, Object>> produtosCompradosExistentes =
+                            (List<Map<String, Object>>) documentSnapshot.get("produtosComprados");
+
+                    if (produtosCompradosExistentes != null) {
+                        usuario.put("produtosComprados", produtosCompradosExistentes);
+                    }
+
+                    // Atualiza o documento com os dados mesclados
+                    documentReference.update(usuario)
+                            .addOnSuccessListener(aVoid -> {
+                                Log.d(TAG, "Dados do usuário atualizados com sucesso.");
+                                showToast(context, "Dados atualizados com sucesso!");
+                            })
+                            .addOnFailureListener(e -> {
+                                Log.e(TAG, "Erro ao atualizar dados do usuário.", e);
+                                showToast(context, "Erro ao atualizar os dados no Firestore.");
+                            });
+                } else {
+                    // O documento não existe. Cria um novo documento.
+                    documentReference.set(usuario)
+                            .addOnSuccessListener(aVoid -> {
+                                Log.d(TAG, "Usuário salvo no Firestore com sucesso.");
+                                showToast(context, "Dados salvos com sucesso!");
+                            })
+                            .addOnFailureListener(e -> {
+                                Log.e(TAG, "Erro ao salvar os dados no Firestore.", e);
+                                showToast(context, "Erro ao salvar os dados no Firestore.");
+                            });
+                }
+            } else {
+                Log.e(TAG, "Erro ao verificar existência do documento.", task.getException());
+                showToast(context, "Erro ao verificar dados do usuário.");
+            }
+        });
     }
 
     private Map<String, Object> createUserDataMap(FirebaseUser user) {
@@ -46,28 +86,6 @@ public class FirebaseUserService {
 
         Log.d(TAG, "Mapa de dados do usuário criado com sucesso: " + usuario);
         return usuario;
-    }
-
-    private void saveToFirestore(String userId, Map<String, Object> userData, Context context) {
-        DocumentReference documentReference = firestore.collection("Users").document(userId);
-        documentReference.set(userData)
-                .addOnCompleteListener(task -> handleFirestoreResponse(task.isSuccessful(), context))
-                .addOnFailureListener(e -> handleFirestoreError(e, context));
-    }
-
-    private void handleFirestoreResponse(boolean success, Context context) {
-        if (success) {
-            Log.d(TAG, "Usuário salvo no Firestore com sucesso");
-            showToast(context, "Dados salvos com sucesso!");
-        } else {
-            Log.e(TAG, "Erro ao salvar no Firestore");
-            showToast(context, "Erro ao salvar os dados no Firestore.");
-        }
-    }
-
-    private void handleFirestoreError(Exception e, Context context) {
-        Log.e(TAG, "Erro ao salvar no Firestore", e);
-        showToast(context, "Erro ao salvar os dados no Firestore.");
     }
 
     private void showToast(Context context, String message) {
