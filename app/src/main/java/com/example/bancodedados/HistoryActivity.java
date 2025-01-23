@@ -4,7 +4,7 @@ import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.example.bancodedados.utils.AdapterTableHistory;
+import com.example.bancodedados.adapters.AdapterTableHistory;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;

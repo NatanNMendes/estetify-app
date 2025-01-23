@@ -12,7 +12,6 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 
 import androidx.core.app.ActivityCompat;
@@ -22,8 +21,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.example.bancodedados.AdapterTable;
-import com.example.bancodedados.utils.AdapterCard;
+import com.example.bancodedados.adapters.AdapterTable;
+import com.example.bancodedados.adapters.AdapterCard;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -65,7 +64,7 @@ public class MainActivity extends BaseActivity {
         RecyclerView tableRecyclerView = findViewById(R.id.table_recycler_view);
         tableRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        adapterTable = new com.example.bancodedados.AdapterTable(new ArrayList<>());
+        adapterTable = new AdapterTable(new ArrayList<>());
         tableRecyclerView.setAdapter(adapterTable);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -137,7 +136,7 @@ public class MainActivity extends BaseActivity {
                                 (List<Map<String, Object>>) task.getResult().get("produtosComprados");
 
                         if (produtosComprados != null) {
-                            List<com.example.bancodedados.AdapterTable.RowItem> products = new ArrayList<>();
+                            List<AdapterTable.RowItem> products = new ArrayList<>();
 
                             // Iterar sobre os 5 primeiros produtos comprados e adicionar ao adapter
                             int count = 0; // Contador para limitar os itens
@@ -169,7 +168,7 @@ public class MainActivity extends BaseActivity {
 
                                 if (nome != null && !nome.isEmpty()) {
                                     // Adicionar à lista de produtos
-                                    products.add(new com.example.bancodedados.AdapterTable.RowItem(nome, preco));
+                                    products.add(new AdapterTable.RowItem(nome, preco));
                                 }
 
                                 count++; // Incrementa o contador

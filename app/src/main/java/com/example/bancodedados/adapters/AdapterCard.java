@@ -1,4 +1,4 @@
-package com.example.bancodedados.utils;
+package com.example.bancodedados.adapters;
 
 import android.content.Context;
 import android.content.Intent;

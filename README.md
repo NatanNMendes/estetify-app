@@ -53,6 +53,11 @@ app/
 │   ├── AndroidManifest.xml
 ├── java/                
 │   ├── java\com\example\bancodedados
+│   │   ├── adapters/
+│   │   │   ├── AdapterCard.java
+│   │   │   ├── AdapterCardSalon.java
+│   │   │   ├── AdapterTable.java
+│   │   │   └── AdapterTableHistory.java
 │   │   ├── models/
 │   │   │   └── Product.java
 │   │   ├── services/
@@ -62,12 +67,6 @@ app/
 │   │   │   ├── SignInService.java
 │   │   │   └── SignUpService.java
 │   │   ├── utils/
-[//]: # (adapters)
-│   │   │   ├── AdapterCard.java
-│   │   │   ├── AdapterCardSalon.java
-│   │   │   ├── AdapterTable.java
-│   │   │   ├── AdapterTableHistory.java
-[//]: # (utilities)
 │   │   │   ├── Navigation.java
 │   │   │   └── PasswordVisibility.java
 │   │   ├── BaseActivity.java
