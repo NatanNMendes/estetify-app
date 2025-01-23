@@ -56,6 +56,7 @@ app/
 │   │   ├── models/
 │   │   │   └── Product.java
 │   │   ├── services/
+│   │   │   ├── CredentialManagerHelper.java  
 │   │   │   ├── FirebaseUserService.java
 │   │   │   ├── SignInGoogleService.java
 │   │   │   ├── SignInService.java
@@ -70,17 +71,15 @@ app/
 │   │   │   ├── Navigation.java
 │   │   │   └── PasswordVisibility.java
 │   │   ├── BaseActivity.java
-│   │   ├── BusinessActivity.java
-│   │   ├── CredentialManagerHelper.java              
+│   │   ├── BusinessActivity.java            
 │   │   ├── HistoryActivity.java
 │   │   ├── LoginActivity.java
 │   │   ├── MainActivity.java  
 │   │   ├── PerfilActivity.java
 │   │   ├── SalonPage.java     
 │   │   ├── SignInActivity.java     
-│   │   ├── SignUpActivity.java
-│   │   ├── StartScreen.java                           
-│   │   └── UserPreferences.java           
+│   │   ├── SignUpActivity.java                         
+│   │   └── StartScreen.java           
 ├── res/                
 │   ├── drawable/
 [//]: # (custom layouts)

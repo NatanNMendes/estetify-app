@@ -1,4 +1,4 @@
-package com.example.bancodedados;
+package com.example.bancodedados.services;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -16,16 +16,5 @@ public class CredentialManagerHelper {
         editor.putString(KEY_EMAIL, email);
         editor.putString(KEY_ID_TOKEN, idToken);
         editor.apply();  // Salva as credenciais
-    }
-
-    // Método para recuperar as credenciais salvas
-    public static String getEmail(Context context) {
-        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        return prefs.getString(KEY_EMAIL, null);
-    }
-
-    public static String getIdToken(Context context) {
-        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        return prefs.getString(KEY_ID_TOKEN, null);
     }
 }

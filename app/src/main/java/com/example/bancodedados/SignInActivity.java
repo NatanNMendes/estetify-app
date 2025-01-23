@@ -6,6 +6,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.bancodedados.services.CredentialManagerHelper;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -47,7 +48,7 @@ public class SignInActivity extends AppCompatActivity {
                 String idToken = account.getIdToken();  // Obtém o ID Token para autenticação no backend
 
                 // Chama um método para salvar as credenciais (pode ser uma classe externa, como CredentialManagerHelper)
-                com.example.bancodedados.CredentialManagerHelper.saveCredentials(this, account.getEmail(), idToken);
+                CredentialManagerHelper.saveCredentials(this, account.getEmail(), idToken);
 
                 // Exibe uma mensagem de sucesso
                 Toast.makeText(this, "Login bem-sucedido!", Toast.LENGTH_SHORT).show();

@@ -32,10 +32,6 @@ public class BusinessActivity extends BaseActivity {
     private List<String> salonNames = new ArrayList<>();
     private List<String> suggestions = new ArrayList<>();
 
-    /**
-     * Método chamado ao criar a BusinessActivity. Inicializa o layout e configura os elementos da interface.
-     * @see         #onCreate
-     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,9 +85,6 @@ public class BusinessActivity extends BaseActivity {
         loadSalonDetails();
     }
 
-    /**
-     * A consulta de busca inserida pelo usuário na barra de pesquisa.
-     */
     private void updateSuggestions(String query) {
         suggestions.clear();
         String normalizedQuery = normalizeText(query);
@@ -109,20 +102,12 @@ public class BusinessActivity extends BaseActivity {
         suggestionAdapter.notifyDataSetChanged();
     }
 
-
-    /**
-     * Normaliza o texto removendo acentos e espaços.
-     */
     private String normalizeText(String text) {
         String normalized = Normalizer.normalize(text, Normalizer.Form.NFD);
         normalized = normalized.replaceAll("[^\\p{ASCII}]", "");
         return normalized.toLowerCase();
     }
 
-
-    /**
-     * Verifica se a query é uma subsequência do nome (ex: "dvn" → "divina").
-     */
     private boolean isSubsequence(String query, String target) {
         int queryIndex = 0, targetIndex = 0;
 
@@ -136,9 +121,6 @@ public class BusinessActivity extends BaseActivity {
         return queryIndex == query.length();
     }
 
-    /**
-     * Carrega os nomes dos salões do Firestore.
-     */
     private void loadSalonNames() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -158,9 +140,6 @@ public class BusinessActivity extends BaseActivity {
                 });
     }
 
-    /**
-     * Filtra os salões conforme a busca.
-     */
     private void filterSalons(String query) {
         filteredSalons.clear();
         String normalizedQuery = normalizeText(query);
@@ -177,9 +156,6 @@ public class BusinessActivity extends BaseActivity {
         }
     }
 
-    /**
-     * Carrega detalhes completos dos salões.
-     */
     private void loadSalonDetails() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
