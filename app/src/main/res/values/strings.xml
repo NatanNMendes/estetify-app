@@ -7,6 +7,6 @@
     <string name="start_screen_button_login">Continuar</string>
 
     <string name="login_title">Bem-vindo de volta!!!</string>
-
+    <string name="forget_password_login">Bem-vindo de volta!!!</string>
     <string name="back_button">Botão para voltar para a tela anterior</string>
 </resources>
